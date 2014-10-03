@@ -5,41 +5,54 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import ssw555.project.team5.model.GEDCOMFamily;
-import ssw555.project.team5.model.GEDCOMIndividual;
+import ssw555.project.team5.model.GEDCOMFamilyRecord;
+import ssw555.project.team5.model.GEDCOMIndividualRecord;
+import ssw555.project.team5.model.GEDCOMObject;
 
 /**
  * 
  * This Java program demonstrate line by line reading using GEDCOMFileReader in
  * Java
  * 
- * @author Michael Lyerly
+ * @author SSW-555 Fall 2014 Team 5
  * 
  */
 
 public class GEDCOMFileReader {
 
-	private static String[] VALID_TAGS = { "INDI", "NAME", "SEX", "BIRT",
-			"DEAT", "FAMC", "FAMS", "FAM", "MARR", "HUSB", "WIFE", "CHIL",
-			"DIV", "DATE", "TRLR", "NOTE" };
-	
-	private List<GEDCOMIndividual> individuals = new ArrayList<GEDCOMIndividual>();
-	private List<GEDCOMFamily> families = new ArrayList<GEDCOMFamily>();
-	
-	private String retrieveArguments(String[] parseLine){
-		String arguments = "";
-		for(int i=2; i < parseLine.length; i++){
-			arguments = arguments + " " + parseLine[i];
+	private static String[] VALID_TOP_LEVEL_TAGS = { "INDI", "FAM", "TRLR",	"NOTE" };
+	private static String[] VALID_FIRST_LEVEL_TAGS = { "NAME", "SEX", "BIRT", "DEAT", "FAMC", "FAMS", "MARR", "HUSB", "WIFE", "CHIL", "DIV" };
+	private static String[] VALID_SECOND_LEVEL_TAGS = { "DATE" };
+
+	private LinkedHashMap<String, GEDCOMIndividualRecord> individuals = new LinkedHashMap<String, GEDCOMIndividualRecord>();
+	private LinkedHashMap<String, GEDCOMFamilyRecord> families = new LinkedHashMap<String, GEDCOMFamilyRecord>();
+
+	private GEDCOMObject parseLine(String line) {
+		GEDCOMObject gedcomObj = new GEDCOMObject();
+
+		String[] parseLine = (line.split("\\s+"));
+		int level = Integer.valueOf(parseLine[0]);
+		String tag = parseLine[1];
+		String arguments = new String();
+
+		if (parseLine.length > 2) {
+			for (int i = 2; i < parseLine.length; i++) {
+				arguments = arguments.concat(" ").concat(parseLine[i]);
+			}
 		}
-		return arguments.trim();
+
+		gedcomObj.setLevel(level);
+		gedcomObj.setTag(tag);
+		gedcomObj.setArguments(arguments.trim());
+
+		return gedcomObj;
 	}
-	
-	private String retrieveXrefId(String xrefId){
+
+	private String retrieveXrefId(String xrefId) {
 		return xrefId.replace("@", "");
 	}
 
@@ -57,108 +70,141 @@ public class GEDCOMFileReader {
 			System.out.println();
 
 			String line = null;
-			GEDCOMIndividual ind = null;
-			GEDCOMFamily fam = null;
-			boolean isIndOrFam = false;
-			
+			GEDCOMIndividualRecord ind = null;
+			GEDCOMFamilyRecord fam = null;
+			GEDCOMObject previousGEDCOMObj = null;
+
 			while ((line = br.readLine()) != null) {
-				String[] parseLine = (line.split("\\s+"));
-				int level = Integer.valueOf(parseLine[0]);
-				String tag = parseLine[1];
-				String arguments = (parseLine.length > 2) ? retrieveArguments(parseLine) : null;
-				
-//				System.out.println("    LEVEL: " + level);
-//				System.out.println("      TAG: " + tag);
-//				System.out.println("ARGUEMTNS: " + arguments);
-				
-				if(level == 0) {
-					if("INDI".equals(arguments)){
-						if(ind != null){
-							individuals.add(ind);
+				GEDCOMObject currentGEDCOMObj = parseLine(line);
+
+				System.out.println("    LEVEL: " + currentGEDCOMObj.getLevel());
+				System.out.println("      TAG: " + currentGEDCOMObj.getTag());
+				System.out.println("ARGUEMTNS: " + currentGEDCOMObj.getArguments());
+
+				switch (currentGEDCOMObj.getLevel()) {
+
+				case 0:
+					switch (currentGEDCOMObj.getArguments()) {
+					
+					case "INDI":
+						if (ind != null) {
+							individuals.put(ind.getUniqueId(), ind);
 						}
-						ind = new GEDCOMIndividual();
-						ind.setIdentifier(retrieveXrefId(tag));
-						isIndOrFam = true;
-					}
-					else if("FAM".equals(arguments)){
-						if(fam != null){
-							families.add(fam);
+						ind = new GEDCOMIndividualRecord();
+						ind.setUniqueId(retrieveXrefId(currentGEDCOMObj.getTag()));
+						break;
+
+					case "FAM":
+						if (fam != null) {
+							families.put(fam.getUniqueId(), fam);
 						}
-						fam = new GEDCOMFamily();
-						fam.setIdentifier(retrieveXrefId(tag));
-						isIndOrFam = true;
-					} else {
-						isIndOrFam = false;
+						fam = new GEDCOMFamilyRecord();
+						fam.setUniqueId(retrieveXrefId(currentGEDCOMObj.getTag()));
+						break;
+
+					default:
+						break;
 					}
+					break;
+
+				case 1:
+					switch (currentGEDCOMObj.getTag()) {
+					
+					case "NAME":
+						ind.setName(currentGEDCOMObj.getArguments());
+						break;
+
+					case "SEX":
+						ind.setSex(currentGEDCOMObj.getArguments());
+						break;
+
+					case "FAMS":
+						ind.setFamilySpouseOf(retrieveXrefId(currentGEDCOMObj.getArguments()));
+						break;
+
+					case "FAMC":
+						ind.setFamilyChildOf(retrieveXrefId(currentGEDCOMObj.getArguments()));
+						break;
+
+					case "HUSB":
+						fam.setHusband(retrieveXrefId(currentGEDCOMObj.getArguments()));
+						break;
+
+					case "WIFE":
+						fam.setWife(retrieveXrefId(currentGEDCOMObj.getArguments()));
+						break;
+						
+					case "CHIL":
+						fam.setChildren(retrieveXrefId(currentGEDCOMObj.getArguments()));
+						break;
+						
+					case "_CURRENT":
+						fam.setCurrent(currentGEDCOMObj.getArguments());
+						break;
+
+					}
+					break;
+
+				case 2:
+					switch (currentGEDCOMObj.getTag()) {
+					
+					case "GIVN":
+						ind.setGivenName(currentGEDCOMObj.getArguments());
+						break;
+
+					case "SURN":
+						ind.setSurName(currentGEDCOMObj.getArguments());
+						break;
+
+					case "_MARNM":
+						ind.setMarriedName(currentGEDCOMObj.getArguments());
+						break;
+
+					case "DATE":
+						switch (previousGEDCOMObj.getTag()) {
+						
+						case "BIRT":
+							ind.setBirth(currentGEDCOMObj.getArguments());
+							break;
+
+						case "DEAT":
+							ind.setDeath(currentGEDCOMObj.getArguments());
+							break;
+							
+						case "MARR":
+							fam.setMarried(currentGEDCOMObj.getArguments());
+							break;
+
+						case "DIV":
+							fam.setDivorce(currentGEDCOMObj.getArguments());
+							break;
+						}
+						break;
+
+					}
+					break;
+
+				default:
+					break;
 				}
-				
-				if(isIndOrFam){
-					if("NAME".equals(tag)){
-						ind.setName(arguments);
-					} else if("HUSB".equals(tag)){
-						fam.setHusband(retrieveXrefId(arguments));
-					} else if("WIFE".equals(tag)){
-						fam.setWife(retrieveXrefId(arguments));
-					}	
-				}				
+
+				previousGEDCOMObj = currentGEDCOMObj;
+
 			}
 
 		} catch (FileNotFoundException ex) {
 			Logger.getLogger(GEDCOMFileReader.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (IOException ex) {
 			Logger.getLogger(GEDCOMFileReader.class.getName()).log(Level.SEVERE, null, ex);
-
 		} finally {
 			try {
+				System.out.println("INDIVIDUALS: " + this.individuals.size());
+				System.out.println("FAMILES: " + this.families.size());
 				br.close();
 				fis.close();
 			} catch (IOException ex) {
 				Logger.getLogger(GEDCOMFileReader.class.getName()).log(Level.SEVERE, null, ex);
 			}
-		}
-	}
-	
-	public String getIndividual(String xRefId){
-		if(individuals != null && !individuals.isEmpty()){
-			for(int i=0; i < individuals.size(); i++){
-				GEDCOMIndividual indObj = individuals.get(i);
-				if(indObj.getIdentifier().equals(xRefId)){
-					return indObj.getName();
-				}
-			}			
-		}
-		return "Individual not found in GEDCOM File!";
-	}
-
-	
-	public void printIndividuals(){
-		System.out.println("Printing GEDCOM File Individuals:");
-
-		if(individuals == null || individuals.isEmpty()){
-			System.out.println("No individuals in GEDCOM File!");
-		} else {
-			for(int i=0; i < individuals.size(); i++){
-				GEDCOMIndividual indObj = individuals.get(i);
-				System.out.println("  ID: " + indObj.getIdentifier());
-				System.out.println("NAME: " + indObj.getName());
-				System.out.println();
-			}	
-		}
-	}
-
-	public void printFamilies(){
-		System.out.println("Printing GEDCOM File Families:");
-		
-		if(families == null || families.isEmpty()){
-			System.out.println("No families in GEDCOM File!");
-		} else {
-			for(int i=0; i < families.size(); i++){
-				GEDCOMFamily famObj = families.get(i);
-				System.out.println("     ID: " + famObj.getIdentifier());
-				System.out.println("HUSBAND: " + getIndividual(famObj.getHusband()));
-				System.out.println("   WIFE: " + getIndividual(famObj.getWife()));
-				System.out.println();
-			}			
 		}
 	}
 
