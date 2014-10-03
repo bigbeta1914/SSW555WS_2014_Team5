@@ -77,9 +77,9 @@ public class GEDCOMFileReader {
 			while ((line = br.readLine()) != null) {
 				GEDCOMObject currentGEDCOMObj = parseLine(line);
 
-				System.out.println("    LEVEL: " + currentGEDCOMObj.getLevel());
-				System.out.println("      TAG: " + currentGEDCOMObj.getTag());
-				System.out.println("ARGUEMTNS: " + currentGEDCOMObj.getArguments());
+//				System.out.println("    LEVEL: " + currentGEDCOMObj.getLevel());
+//				System.out.println("      TAG: " + currentGEDCOMObj.getTag());
+//				System.out.println("ARGUEMTNS: " + currentGEDCOMObj.getArguments());
 
 				switch (currentGEDCOMObj.getLevel()) {
 
