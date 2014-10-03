@@ -24,9 +24,9 @@ import ssw555.project.team5.model.GEDCOMObject;
 
 public class GEDCOMFileReader {
 
-	private static String[] VALID_TOP_LEVEL_TAGS = { "INDI", "FAM", "TRLR",	"NOTE" };
-	private static String[] VALID_FIRST_LEVEL_TAGS = { "NAME", "SEX", "BIRT", "DEAT", "FAMC", "FAMS", "MARR", "HUSB", "WIFE", "CHIL", "DIV" };
-	private static String[] VALID_SECOND_LEVEL_TAGS = { "DATE" };
+//	private static String[] VALID_TOP_LEVEL_TAGS = { "INDI", "FAM", "TRLR",	"NOTE" };
+//	private static String[] VALID_FIRST_LEVEL_TAGS = { "NAME", "SEX", "BIRT", "DEAT", "FAMC", "FAMS", "MARR", "HUSB", "WIFE", "CHIL", "DIV" };
+//	private static String[] VALID_SECOND_LEVEL_TAGS = { "DATE" };
 
 	private LinkedHashMap<String, GEDCOMIndividualRecord> individuals = new LinkedHashMap<String, GEDCOMIndividualRecord>();
 	private LinkedHashMap<String, GEDCOMFamilyRecord> families = new LinkedHashMap<String, GEDCOMFamilyRecord>();
@@ -73,7 +73,7 @@ public class GEDCOMFileReader {
 			GEDCOMIndividualRecord ind = null;
 			GEDCOMFamilyRecord fam = null;
 			GEDCOMObject previousGEDCOMObj = null;
-
+			
 			while ((line = br.readLine()) != null) {
 				GEDCOMObject currentGEDCOMObj = parseLine(line);
 
@@ -89,20 +89,30 @@ public class GEDCOMFileReader {
 					case "INDI":
 						if (ind != null) {
 							individuals.put(ind.getUniqueId(), ind);
+							ind = null;
 						}
 						ind = new GEDCOMIndividualRecord();
 						ind.setUniqueId(retrieveXrefId(currentGEDCOMObj.getTag()));
 						break;
 
 					case "FAM":
+						if (ind != null) {
+							individuals.put(ind.getUniqueId(), ind);
+							ind = null;
+						}
 						if (fam != null) {
 							families.put(fam.getUniqueId(), fam);
+							fam = null;						
 						}
 						fam = new GEDCOMFamilyRecord();
 						fam.setUniqueId(retrieveXrefId(currentGEDCOMObj.getTag()));
 						break;
 
 					default:
+						if (fam != null) {
+							families.put(fam.getUniqueId(), fam);
+							fam = null;						
+						}
 						break;
 					}
 					break;
