@@ -8,6 +8,8 @@ import java.io.InputStreamReader;
 import java.util.LinkedHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Collection;
+import java.util.Iterator;
 
 import ssw555.project.team5.model.GEDCOMFamilyRecord;
 import ssw555.project.team5.model.GEDCOMIndividualRecord;
@@ -54,6 +56,22 @@ public class GEDCOMFileReader {
 
 	private String retrieveXrefId(String xrefId) {
 		return xrefId.replace("@", "");
+	}
+	
+	private Date convertStringToDate(String dateString) {
+		
+	}
+	
+	public void checkDeathBeforeBirth() throws IOException {
+		// get collection of individuals
+		Collection indivCollection = individuals.values();
+		
+		// iterator for collection
+		Iterator indivIterator = indivCollection.iterator();
+		
+		// iterate through all individuals
+		while(indivIterator.hasNext()) {
+		}
 	}
 
 	public void readFile(String file) throws IOException {
