@@ -20,6 +20,7 @@
 1 BIRT
 2 DATE 9 OCT 1972
 1 FAMC @F1@
+0 NOTE John Smith is being used as a test for story US03 "death before marriage" check
 0 @I2@ INDI
 1 NAME John /Smith/
 2 GIVN John
@@ -28,8 +29,11 @@
 1 SEX M
 1 BIRT
 2 DATE 4 APR 1944
+1 DEAT Y
+2 DATE 7 JUN 1969
 1 FAMS @F1@
 1 FAMS @F2@
+0 NOTE Jane Doe is being used as a test for story US02 "death before birth" check
 0 @I3@ INDI
 1 NAME Jane /Doe/
 2 GIVN Jane
@@ -39,7 +43,7 @@
 1 BIRT
 2 DATE 11 SEP 1947
 1 DEAT Y
-2 DATE 7 JUN 1982
+2 DATE 7 JUN 1945
 1 FAMS @F1@
 0 @I4@ INDI
 1 NAME Mary /Mack/
@@ -78,6 +82,7 @@
 1 BIRT
 2 DATE 25 JUL 1988
 1 FAMS @F3@
+0 NOTE John Smith is being used as a test for story US03 "death before marriage" check
 0 @F1@ FAM
 1 HUSB @I2@
 1 WIFE @I3@

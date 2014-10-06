@@ -8,7 +8,9 @@ import java.io.InputStreamReader;
 import java.util.LinkedHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 
 import ssw555.project.team5.model.GEDCOMFamilyRecord;
@@ -58,21 +60,129 @@ public class GEDCOMFileReader {
 		return xrefId.replace("@", "");
 	}
 	
-	private Date convertStringToDate(String dateString) {
+	// pre: assumes a date string in format "DD MMM YYYY"
+	private Calendar convertStringToDate(String dateString) {
+		Calendar returnCalendar = Calendar.getInstance();
+		String[] parseLine = (dateString.split("\\s+"));
 		
+		returnCalendar.set(Calendar.DAY_OF_MONTH, Integer.valueOf(parseLine[0]));
+		
+		switch(parseLine[1]) {
+		case "JAN":
+			returnCalendar.set(Calendar.MONTH, Calendar.JANUARY);
+			break;
+		case "FEB":
+			returnCalendar.set(Calendar.MONTH, Calendar.FEBRUARY);
+			break;
+		case "MAR":
+			returnCalendar.set(Calendar.MONTH, Calendar.MARCH);
+			break;
+		case "APR":
+			returnCalendar.set(Calendar.MONTH, Calendar.APRIL);
+			break;
+		case "MAY":
+			returnCalendar.set(Calendar.MONTH, Calendar.MAY);
+			break;
+		case "JUN":
+			returnCalendar.set(Calendar.MONTH, Calendar.JUNE);
+			break;
+		case "JUL":
+			returnCalendar.set(Calendar.MONTH, Calendar.JULY);
+			break;
+		case "AUG":
+			returnCalendar.set(Calendar.MONTH, Calendar.AUGUST);
+			break;
+		case "SEP":
+			returnCalendar.set(Calendar.MONTH, Calendar.SEPTEMBER);
+			break;
+		case "OCT":
+			returnCalendar.set(Calendar.MONTH, Calendar.OCTOBER);
+			break;
+		case "NOV":
+			returnCalendar.set(Calendar.MONTH, Calendar.NOVEMBER);
+			break;
+		case "DEC":
+			returnCalendar.set(Calendar.MONTH, Calendar.DECEMBER);
+			break;
+		}
+		
+		returnCalendar.set(Calendar.YEAR, Integer.valueOf(parseLine[2]));
+		
+		return returnCalendar;
 	}
 	
-	public void checkDeathBeforeBirth() throws IOException {
-		// get collection of individuals
-		Collection indivCollection = individuals.values();
+	public void checkDeathBeforeBirth() {
+			// get collection of individuals
+			Collection indivCollection = individuals.values();
+			
+			// iterator for collection
+			Iterator indivIterator = indivCollection.iterator();
+			
+			// iterate through all individuals
+			while(indivIterator.hasNext()) {
+				GEDCOMIndividualRecord ind = (GEDCOMIndividualRecord) indivIterator.next(); // not sure if this works
+				
+				//System.out.println("ind.getBirth() = " + ind.getBirth());
+				//System.out.println("ind.getDeath() = " + ind.getDeath());
+				
+				// only check if both birth and death have a date
+				if( (ind.getBirth() != null) && (ind.getDeath() != null) )
+				{
+					// convert birth and death date strings to Calendar objects
+					Calendar calandarBirth = convertStringToDate(ind.getBirth());
+					Calendar calendarDeath = convertStringToDate(ind.getDeath());
+					
+					// do the check
+					if(calendarDeath.before(calandarBirth))
+					{
+						System.out.println("ERROR - DeathBeforeBirth: name = " + ind.getName() + " " + ind.getSurName() 
+								+", death date = " + ind.getDeath() + " is before birth date = " + ind.getBirth());
+					}
+				}
+			}
+	}
+	
+	public void checkDeathBeforeMarriage() {
+		// get collection of families
+		Collection famCollection = families.values();
 		
 		// iterator for collection
-		Iterator indivIterator = indivCollection.iterator();
+		Iterator famIterator = famCollection.iterator();
 		
 		// iterate through all individuals
-		while(indivIterator.hasNext()) {
+		while(famIterator.hasNext()) {
+			GEDCOMFamilyRecord fam = (GEDCOMFamilyRecord) famIterator.next(); // not sure if this works
+			
+			// only check if both birth and death have a date
+			if( fam.getMarried() != null )
+			{
+				// convert marriage date to Calendar object
+				Calendar calendarMarried = convertStringToDate(fam.getMarried());
+				
+				GEDCOMIndividualRecord ind;
+				
+				// get husband
+				ind = individuals.get(fam.getHusband());
+				
+				for( int i = 0; i < 2; i++ )
+				{
+					if( ind.getDeath() != null )
+					{
+						// convert birth to Calendar object
+						Calendar calendarDeath = convertStringToDate(ind.getDeath());
+						// do the check
+						if(calendarDeath.before(calendarMarried))
+						{
+							System.out.println("ERROR - DeathBeforeMarriage: name = " + ind.getName() + " " + ind.getSurName() 
+									+", death date = " + ind.getDeath() + " is before marriage date = " + fam.getMarried());
+						}
+						
+						ind = individuals.get(fam.getWife());
+					}
+				}
+			}
 		}
-	}
+}
 
 	public void readFile(String file) throws IOException {
 
