@@ -14,6 +14,12 @@ public class MainProgram {
 			// death before marriage check
 			gcfr.checkDeathBeforeMarriage();
 			
+			// marriage before birth check
+			gcfr.checkMarriageBeforeBirth();
+			
+			// child birth before parent check
+			gcfr.checkChildBirthBeforeParentBirth();
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
