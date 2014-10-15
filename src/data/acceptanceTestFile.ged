@@ -45,6 +45,7 @@
 1 DEAT Y
 2 DATE 7 JUN 1945
 1 FAMS @F1@
+0 NOTE Mary Mack is being used as a test for story US08 "No date after present" check
 0 @I4@ INDI
 1 NAME Mary /Mack/
 2 GIVN Mary
@@ -52,7 +53,7 @@
 2 _MARNM Mack
 1 SEX F
 1 BIRT
-2 DATE 13 MAY 1988
+2 DATE 13 MAY 2015
 1 FAMS @F3@
 1 FAMC @F2@
 0 @I5@ INDI
@@ -93,12 +94,13 @@
 1 EVEN
 2 TYPE Ending
 1 _CURRENT N
+0 NOTE Familly F2 is being used as a test for story US08 "No date after present" check
 0 @F2@ FAM
 1 HUSB @I2@
 1 WIFE @I5@
 1 CHIL @I4@
 1 MARR
-2 DATE 13 JUN 1985
+2 DATE 13 JUN 2015
 2 PLAC Florida City, Florida
 1 _CURRENT Y
 0 @F3@ FAM
