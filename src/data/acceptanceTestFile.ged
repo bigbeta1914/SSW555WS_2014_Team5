@@ -18,7 +18,7 @@
 2 _MARNM Smith
 1 SEX M
 1 BIRT
-2 DATE 9 OCT 1972
+2 DATE 9 OCT 1913
 1 FAMC @F1@
 0 NOTE John Smith is being used as a test for story US03 "death before marriage" check
 0 @I2@ INDI
@@ -63,7 +63,7 @@
 2 _MARNM Smith
 1 SEX F
 1 BIRT
-2 DATE 14 JUL 1949
+2 DATE 14 JUL 2004
 1 FAMS @F2@
 0 @I6@ INDI
 1 NAME Luther /Mack/
