@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,6 +61,10 @@ public class GEDCOMFileReader {
 
 	private String retrieveXrefId(String xrefId) {
 		return xrefId.replace("@", "");
+	}
+	
+	private boolean isNullOrBlank(String stg){
+		return (null == stg || stg.trim().length() <= 0);
 	}
 	
 	// pre: assumes a date string in format "DD MMM YYYY"
@@ -231,6 +237,60 @@ public class GEDCOMFileReader {
 		
 	}
 	
+public void checkFutureDate() throws ParseException{
+		
+		for(String key : individuals.keySet()){
+			GEDCOMIndividualRecord ind = (GEDCOMIndividualRecord) individuals.get(key);
+			
+			Date birth = null;
+			if(isNullOrBlank(ind.getBirth())){
+			} else {
+				birth = new SimpleDateFormat("dd MMM yyyy").parse(ind.getBirth());
+				
+				if(birth.after(new Date())){
+					System.out.println("ERROR: " + ind.getUniqueId() + " birth date is after current date.");
+				}
+
+			}
+			
+			Date death = null;
+			if(isNullOrBlank(ind.getDeath())){
+				
+			} else {
+				death = new SimpleDateFormat("dd MMM yyyy").parse(ind.getDeath());
+				
+				if(death.after(new Date())){
+					System.out.println("ERROR: " + ind.getUniqueId() + " death date is after current date.");	
+				}
+			}			
+		}
+
+		for(String key : families.keySet()){
+			GEDCOMFamilyRecord fam = (GEDCOMFamilyRecord) families.get(key);
+			
+			Date married = null;
+			if(isNullOrBlank(fam.getMarried())){
+			} else {
+				married = new SimpleDateFormat("dd MMM yyyy").parse(fam.getMarried());
+				
+				if(married.after(new Date())){
+					System.out.println("ERROR: " + fam.getHusband() +" & " + fam.getWife() + " married date is after current date.");
+				}
+
+			}
+			
+			Date divorce = null;
+			if(isNullOrBlank(fam.getDivorce())){
+			} else {
+				divorce = new SimpleDateFormat("dd MMM yyyy").parse(fam.getDivorce());
+				
+				if(divorce.after(new Date())){
+					System.out.println("ERROR: " + fam.getHusband() +" & " + fam.getWife() + " divorce date is after current date.");
+				}
+			}
+		}		
+	}
+
 	public void checkChildBirthBeforeParentBirth() {
 		// get collection of families
 		Collection<GEDCOMFamilyRecord> famCollection = families.values();
@@ -315,6 +375,7 @@ public class GEDCOMFileReader {
 		} // while(famIterator.hasNext())
 	}
 
+	
 	public void readFile(String file) throws IOException {
 
 		FileInputStream fis = null;
