@@ -19,6 +19,12 @@ public class MainProgram {
 			
 			// child birth before parent check
 			gcfr.checkChildBirthBeforeParentBirth();
+                        
+                        // check for age > 100
+                        gcfr.isAgeGreaterThan100();
+                        
+                        // check to see if parent is less than 13 years old
+                        gcfr.isParentAgeIsLessThan13();
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
