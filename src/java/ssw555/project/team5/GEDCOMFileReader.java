@@ -356,26 +356,77 @@ public class GEDCOMFileReader {
     public void isAgeGreaterThan100() {
         double age;
         // get collection of families
-        Collection<GEDCOMFamilyRecord> famCollection = families.values();
+        Collection<mainprogram.GEDCOMFamilyRecord> famCollection = families.values();
 
         // iterator for collection
-        Iterator<GEDCOMFamilyRecord> famIterator = famCollection.iterator();
+        Iterator<mainprogram.GEDCOMFamilyRecord> famIterator = famCollection.iterator();
 
         // iterate through all families
         while (famIterator.hasNext()) {
-            GEDCOMFamilyRecord fam = (GEDCOMFamilyRecord) famIterator.next();
+            mainprogram.GEDCOMFamilyRecord fam = (mainprogram.GEDCOMFamilyRecord) famIterator.next();
 
-            // get member
-            GEDCOMIndividualRecord memeber = individuals.get(fam.getBirth());
+            // get husband
+            mainprogram.GEDCOMIndividualRecord father = individuals.get(fam.getHusband());
 
-            // only continue if member's birthdate is provided (may be omitted)
-            if (memeber.getBirth() != null) {
+            // only continue if father's birthdate is provided (may be omitted)
+            if (father.getBirth() != null) {
                 // convert member birth to Calendar object
-                Calendar calendarParentBirth = convertStringToDate(memeber.getBirth());
+                Calendar calendarParentBirth = convertStringToDate(father.getBirth());
                 // get the members age (1000 ms = 1 sec) -> (60 sec = 1 min) -> (60 min = 1 hour) -> (24 hour = 1 day) -> (365.242 days = 1 year)
-                age = (((((calendarParentBirth.getTimeInMillis() / 1000) / 60) / 60) / 24) / 365.242);
+                Date date = calendarParentBirth.getTime();
+                age = (int) (date.getTime() / 1000 / 60 / 60 / 24 / 365.242);
+                if (age < 0) {
+                    age = age * -1;
+                }
                 if (age >= 100) {
-                    System.out.println("ERROR - member: " + memeber.getName() + " claims to be older than 100!");
+                    System.out.println("ERROR - isAgeGreaterThan100: " + father.getName() + " claims to be over 100 years old!");
+                }
+            }
+
+            // get wife
+            mainprogram.GEDCOMIndividualRecord mother = individuals.get(fam.getWife());
+
+            // only continue if mother's birthdate is provided (may be omitted)
+            if (mother.getBirth() != null) {
+                // convert member birth to Calendar object
+                Calendar calendarParentBirth = convertStringToDate(mother.getBirth());
+                // get the members age (1000 ms = 1 sec) -> (60 sec = 1 min) -> (60 min = 1 hour) -> (24 hour = 1 day) -> (365.242 days = 1 year)
+                Date date = calendarParentBirth.getTime();
+                age = (int) (date.getTime() / 1000 / 60 / 60 / 24 / 365.242);
+                if (age < 0) {
+                    age = age * -1;
+                }
+                if (age >= 100) {
+                    System.out.println("ERROR - isAgeGreaterThan100: " + mother.getName() + " claims to be over 100 years old!");
+                }
+            }
+
+            // get children
+            ArrayList<String> childrenArrayList = fam.getChildren();
+
+            // only check if family has children
+            if (childrenArrayList != null) {
+                // convert to child array, because I'm not sure how to work with an array list
+                String[] childrenArray = new String[childrenArrayList.size()];
+                childrenArray = childrenArrayList.toArray(childrenArray);
+
+                for (String childId : childrenArray) {
+                    mainprogram.GEDCOMIndividualRecord child = individuals.get(childId);
+
+                    // only check if child birthdate is provided (may be omitted)
+                    if (child.getBirth() != null) {
+                        // convert member birth to Calendar object
+                        Calendar calendarParentBirth = convertStringToDate(child.getBirth());
+                        // get the members age (1000 ms = 1 sec) -> (60 sec = 1 min) -> (60 min = 1 hour) -> (24 hour = 1 day) -> (365.242 days = 1 year)
+                        Date date = calendarParentBirth.getTime();
+                        age = (int) (date.getTime() / 1000 / 60 / 60 / 24 / 365.242);
+                        if (age < 0) {
+                            age = age * -1;
+                        }
+                        if (age >= 100) {
+                            System.out.println("ERROR - isAgeGreaterThan100: " + child.getName() + " claims to be over 100 years old!");
+                        }
+                    }
                 }
             }
         }
@@ -384,29 +435,33 @@ public class GEDCOMFileReader {
     public void isParentAgeIsLessThan13() {
         double age;
         // get collection of families
-        Collection<GEDCOMFamilyRecord> famCollection = families.values();
+        Collection<mainprogram.GEDCOMFamilyRecord> famCollection = families.values();
 
         // iterator for collection
-        Iterator<GEDCOMFamilyRecord> famIterator = famCollection.iterator();
+        Iterator<mainprogram.GEDCOMFamilyRecord> famIterator = famCollection.iterator();
 
         // iterate through all families
         while (famIterator.hasNext()) {
-            GEDCOMFamilyRecord fam = (GEDCOMFamilyRecord) famIterator.next();
+            mainprogram.GEDCOMFamilyRecord fam = (mainprogram.GEDCOMFamilyRecord) famIterator.next();
 
             // get husband
-            GEDCOMIndividualRecord father = individuals.get(fam.getHusband());
+            mainprogram.GEDCOMIndividualRecord father = individuals.get(fam.getHusband());
 
             // get wife
-            GEDCOMIndividualRecord mother = individuals.get(fam.getWife());
+            mainprogram.GEDCOMIndividualRecord mother = individuals.get(fam.getWife());
 
             // only continue if father's birthdate is provided (may be omitted)
             if (father.getBirth() != null) {
                 // convert member birth to Calendar object
                 Calendar calendarParentBirth = convertStringToDate(father.getBirth());
                 // get the members age (1000 ms = 1 sec) -> (60 sec = 1 min) -> (60 min = 1 hour) -> (24 hour = 1 day) -> (365.242 days = 1 year)
-                age = (((((calendarParentBirth.getTimeInMillis() / 1000) / 60) / 60) / 24) / 365.242);
+                Date date = calendarParentBirth.getTime();
+                age = (int) (date.getTime()/1000/60/60/24/365.242);
+                if (age < 0) {
+                    age = age * -1;
+                }
                 if (age <= 13) {
-                    System.out.println("ERROR - Father member: " + father.getName() + " claims to be 13 years or younger!");
+                    System.out.println("ERROR - isParentAgeIsLessThan13: " + father.getName() + " claims to be 13 years or younger!");
                 }
             }
 
@@ -415,9 +470,13 @@ public class GEDCOMFileReader {
                 // convert member birth to Calendar object
                 Calendar calendarParentBirth = convertStringToDate(mother.getBirth());
                 // get the members age (1000 ms = 1 sec) -> (60 sec = 1 min) -> (60 min = 1 hour) -> (24 hour = 1 day) -> (365.242 days = 1 year)
-                age = (((((calendarParentBirth.getTimeInMillis() / 1000) / 60) / 60) / 24) / 365.242);
+                Date date = calendarParentBirth.getTime();
+                age = (int) (date.getTime()/1000/60/60/24/365.242);
+                if (age < 0) {
+                    age = age * -1;
+                }
                 if (age <= 13) {
-                    System.out.println("ERROR - Mother member: " + mother.getName() + " claims to be 13 years or younger!");
+                    System.out.println("ERROR - isParentAgeIsLessThan13: " + mother.getName() + " claims to be 13 years or younger!");
                 }
             }
         }
