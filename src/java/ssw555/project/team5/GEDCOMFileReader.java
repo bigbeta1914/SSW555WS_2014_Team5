@@ -356,17 +356,17 @@ public class GEDCOMFileReader {
     public void isAgeGreaterThan100() {
         double age;
         // get collection of families
-        Collection<mainprogram.GEDCOMFamilyRecord> famCollection = families.values();
+        Collection<GEDCOMFamilyRecord> famCollection = families.values();
 
         // iterator for collection
-        Iterator<mainprogram.GEDCOMFamilyRecord> famIterator = famCollection.iterator();
+        Iterator<GEDCOMFamilyRecord> famIterator = famCollection.iterator();
 
         // iterate through all families
         while (famIterator.hasNext()) {
-            mainprogram.GEDCOMFamilyRecord fam = (mainprogram.GEDCOMFamilyRecord) famIterator.next();
+            GEDCOMFamilyRecord fam = (GEDCOMFamilyRecord) famIterator.next();
 
             // get husband
-            mainprogram.GEDCOMIndividualRecord father = individuals.get(fam.getHusband());
+            GEDCOMIndividualRecord father = individuals.get(fam.getHusband());
 
             // only continue if father's birthdate is provided (may be omitted)
             if (father.getBirth() != null) {
@@ -384,7 +384,7 @@ public class GEDCOMFileReader {
             }
 
             // get wife
-            mainprogram.GEDCOMIndividualRecord mother = individuals.get(fam.getWife());
+            GEDCOMIndividualRecord mother = individuals.get(fam.getWife());
 
             // only continue if mother's birthdate is provided (may be omitted)
             if (mother.getBirth() != null) {
@@ -411,7 +411,7 @@ public class GEDCOMFileReader {
                 childrenArray = childrenArrayList.toArray(childrenArray);
 
                 for (String childId : childrenArray) {
-                    mainprogram.GEDCOMIndividualRecord child = individuals.get(childId);
+                    GEDCOMIndividualRecord child = individuals.get(childId);
 
                     // only check if child birthdate is provided (may be omitted)
                     if (child.getBirth() != null) {
@@ -435,20 +435,20 @@ public class GEDCOMFileReader {
     public void isParentAgeIsLessThan13() {
         double age;
         // get collection of families
-        Collection<mainprogram.GEDCOMFamilyRecord> famCollection = families.values();
+        Collection<GEDCOMFamilyRecord> famCollection = families.values();
 
         // iterator for collection
-        Iterator<mainprogram.GEDCOMFamilyRecord> famIterator = famCollection.iterator();
+        Iterator<GEDCOMFamilyRecord> famIterator = famCollection.iterator();
 
         // iterate through all families
         while (famIterator.hasNext()) {
-            mainprogram.GEDCOMFamilyRecord fam = (mainprogram.GEDCOMFamilyRecord) famIterator.next();
+            GEDCOMFamilyRecord fam = (GEDCOMFamilyRecord) famIterator.next();
 
             // get husband
-            mainprogram.GEDCOMIndividualRecord father = individuals.get(fam.getHusband());
+            GEDCOMIndividualRecord father = individuals.get(fam.getHusband());
 
             // get wife
-            mainprogram.GEDCOMIndividualRecord mother = individuals.get(fam.getWife());
+            GEDCOMIndividualRecord mother = individuals.get(fam.getWife());
 
             // only continue if father's birthdate is provided (may be omitted)
             if (father.getBirth() != null) {
@@ -482,6 +482,33 @@ public class GEDCOMFileReader {
         }
     }
 
+	public void checkSameSexMarriageWithChildren(){
+		for(String key : families.keySet()){
+			GEDCOMFamilyRecord fam = (GEDCOMFamilyRecord) families.get(key);
+			
+			if(isNullOrBlank(fam.getHusband())){
+				
+			} else {
+				GEDCOMIndividualRecord husband = (GEDCOMIndividualRecord) individuals.get(fam.getHusband());
+				
+				if(isNullOrBlank(fam.getWife())){
+					
+				} else {
+					GEDCOMIndividualRecord wife = (GEDCOMIndividualRecord) individuals.get(fam.getWife());
+									
+					if(husband.getSex().equals(wife.getSex())){
+						System.out.println("ERROR: " + fam.getUniqueId() + " family has same sex marrige with husband: " + husband.getUniqueId() + " and wife: " + wife.getUniqueId());
+						
+						if(fam.getChildren().size() > 0){
+							System.out.println("ERROR: " + fam.getUniqueId() + " family has same sex marrige with children!");	
+						}
+					}
+				}
+			}			
+		}
+	}
+
+    
     public void readFile(String file) throws IOException {
 
         FileInputStream fis = null;
