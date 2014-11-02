@@ -39,7 +39,8 @@
 2 GIVN Jane
 2 SURN Doe
 2 _MARNM Smith
-1 SEX F
+0 NOTE Same sex marriage test
+1 SEX M
 1 BIRT
 2 DATE 11 SEP 1947
 1 DEAT Y
@@ -51,7 +52,8 @@
 2 GIVN Mary
 2 SURN Mack
 2 _MARNM Mack
-1 SEX F
+0 NOTE Same sex marriage test
+1 SEX M
 1 BIRT
 2 DATE 13 MAY 2015
 1 FAMS @F3@
@@ -64,6 +66,43 @@
 1 SEX F
 1 BIRT
 2 DATE 14 JUL 2004
+0 NOTE --------------------------------------------------START Birth to more than triplets test
+0 @I20@ INDI
+1 NAME Sarah /Rae/
+2 GIVN Sarah
+2 SURN Rae
+2 _MARNM Smith
+1 SEX F
+1 BIRT
+2 DATE 14 JUL 2004
+0 NOTE --------------------------------------------------
+0 @I21@ INDI
+1 NAME Sarah /Rae/
+2 GIVN Sarah
+2 SURN Rae
+2 _MARNM Smith
+1 SEX F
+1 BIRT
+2 DATE 14 JUL 2004
+0 NOTE --------------------------------------------------
+0 @I22@ INDI
+1 NAME Sarah /Rae/
+2 GIVN Sarah
+2 SURN Rae
+2 _MARNM Smith
+1 SEX F
+1 BIRT
+2 DATE 14 JUL 2004
+0 NOTE --------------------------------------------------
+0 @I23@ INDI
+1 NAME Sarah /Rae/
+2 GIVN Sarah
+2 SURN Rae
+2 _MARNM Smith
+1 SEX F
+1 BIRT
+2 DATE 14 JUL 2004
+0 NOTE -------------------------------------------------- END Birth to more than triplets test
 1 FAMS @F2@
 0 @I6@ INDI
 1 NAME Luther /Mack/
@@ -99,6 +138,10 @@
 1 HUSB @I2@
 1 WIFE @I5@
 1 CHIL @I4@
+1 CHIL @I20@
+1 CHIL @I21@
+1 CHIL @I22@
+1 CHIL @I23@
 1 MARR
 2 DATE 13 JUN 2015
 2 PLAC Florida City, Florida

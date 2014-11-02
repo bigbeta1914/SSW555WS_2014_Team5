@@ -127,7 +127,7 @@ public class GEDCOMFileReader {
         while (indivIterator.hasNext()) {
             GEDCOMIndividualRecord ind = (GEDCOMIndividualRecord) indivIterator.next(); // not sure if this works
 
-				//System.out.println("ind.getBirth() = " + ind.getBirth());
+            //System.out.println("ind.getBirth() = " + ind.getBirth());
             //System.out.println("ind.getDeath() = " + ind.getDeath());
             // only check if both birth and death have a date
             if ((ind.getBirth() != null) && (ind.getDeath() != null)) {
@@ -235,7 +235,7 @@ public class GEDCOMFileReader {
                 birth = new SimpleDateFormat("dd MMM yyyy").parse(ind.getBirth());
 
                 if (birth.after(new Date())) {
-                    System.out.println("ERROR: " + ind.getUniqueId() + " birth date is after current date.");
+                    System.out.println("ERROR - " + ind.getUniqueId() + " birth date is after current date.");
                 }
 
             }
@@ -247,7 +247,7 @@ public class GEDCOMFileReader {
                 death = new SimpleDateFormat("dd MMM yyyy").parse(ind.getDeath());
 
                 if (death.after(new Date())) {
-                    System.out.println("ERROR: " + ind.getUniqueId() + " death date is after current date.");
+                    System.out.println("ERROR - " + ind.getUniqueId() + " death date is after current date.");
                 }
             }
         }
@@ -261,7 +261,7 @@ public class GEDCOMFileReader {
                 married = new SimpleDateFormat("dd MMM yyyy").parse(fam.getMarried());
 
                 if (married.after(new Date())) {
-                    System.out.println("ERROR: " + fam.getHusband() + " & " + fam.getWife() + " married date is after current date.");
+                    System.out.println("ERROR - " + fam.getHusband() + " & " + fam.getWife() + " married date is after current date.");
                 }
 
             }
@@ -272,7 +272,7 @@ public class GEDCOMFileReader {
                 divorce = new SimpleDateFormat("dd MMM yyyy").parse(fam.getDivorce());
 
                 if (divorce.after(new Date())) {
-                    System.out.println("ERROR: " + fam.getHusband() + " & " + fam.getWife() + " divorce date is after current date.");
+                    System.out.println("ERROR - " + fam.getHusband() + " & " + fam.getWife() + " divorce date is after current date.");
                 }
             }
         }
@@ -456,7 +456,7 @@ public class GEDCOMFileReader {
                 Calendar calendarParentBirth = convertStringToDate(father.getBirth());
                 // get the members age (1000 ms = 1 sec) -> (60 sec = 1 min) -> (60 min = 1 hour) -> (24 hour = 1 day) -> (365.242 days = 1 year)
                 Date date = calendarParentBirth.getTime();
-                age = (int) (date.getTime()/1000/60/60/24/365.242);
+                age = (int) (date.getTime() / 1000 / 60 / 60 / 24 / 365.242);
                 if (age < 0) {
                     age = age * -1;
                 }
@@ -471,7 +471,7 @@ public class GEDCOMFileReader {
                 Calendar calendarParentBirth = convertStringToDate(mother.getBirth());
                 // get the members age (1000 ms = 1 sec) -> (60 sec = 1 min) -> (60 min = 1 hour) -> (24 hour = 1 day) -> (365.242 days = 1 year)
                 Date date = calendarParentBirth.getTime();
-                age = (int) (date.getTime()/1000/60/60/24/365.242);
+                age = (int) (date.getTime() / 1000 / 60 / 60 / 24 / 365.242);
                 if (age < 0) {
                     age = age * -1;
                 }
@@ -482,33 +482,91 @@ public class GEDCOMFileReader {
         }
     }
 
-	public void checkSameSexMarriageWithChildren(){
-		for(String key : families.keySet()){
-			GEDCOMFamilyRecord fam = (GEDCOMFamilyRecord) families.get(key);
-			
-			if(isNullOrBlank(fam.getHusband())){
-				
-			} else {
-				GEDCOMIndividualRecord husband = (GEDCOMIndividualRecord) individuals.get(fam.getHusband());
-				
-				if(isNullOrBlank(fam.getWife())){
-					
-				} else {
-					GEDCOMIndividualRecord wife = (GEDCOMIndividualRecord) individuals.get(fam.getWife());
-									
-					if(husband.getSex().equals(wife.getSex())){
-						System.out.println("ERROR: " + fam.getUniqueId() + " family has same sex marrige with husband: " + husband.getUniqueId() + " and wife: " + wife.getUniqueId());
-						
-						if(fam.getChildren().size() > 0){
-							System.out.println("ERROR: " + fam.getUniqueId() + " family has same sex marrige with children!");	
-						}
-					}
-				}
-			}			
-		}
-	}
+    public void checkSameSexMarriageWithChildren() {
+        for (String key : families.keySet()) {
+            GEDCOMFamilyRecord fam = (GEDCOMFamilyRecord) families.get(key);
 
-    
+            if (isNullOrBlank(fam.getHusband())) {
+
+            } else {
+                GEDCOMIndividualRecord husband = (GEDCOMIndividualRecord) individuals.get(fam.getHusband());
+
+                if (isNullOrBlank(fam.getWife())) {
+
+                } else {
+                    GEDCOMIndividualRecord wife = (GEDCOMIndividualRecord) individuals.get(fam.getWife());
+
+                    if (husband.getSex().equals(wife.getSex())) {
+                        System.out.println("ERROR - " + fam.getUniqueId() + " family has same sex marrige with husband: " + husband.getUniqueId() + " and wife: " + wife.getUniqueId());
+
+                        if (fam.getChildren().size() > 0) {
+                            System.out.println("ERROR - " + fam.getUniqueId() + " family has same sex marrige with children!");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void checkMultiKidsBirthDate() {
+        int count = 0;
+        String age = "";
+        String family = "";
+        // get collection of families
+        Collection<GEDCOMFamilyRecord> famCollection = families.values();
+
+        // iterator for collection
+        Iterator<GEDCOMFamilyRecord> famIterator = famCollection.iterator();
+
+        // iterate through all families
+        while (famIterator.hasNext()) {
+            GEDCOMFamilyRecord fam = (GEDCOMFamilyRecord) famIterator.next();
+
+            // first family to set the id
+            if (family.isEmpty()) {
+                family = fam.getUniqueId();
+            }
+
+            // get children array
+            ArrayList<String> childrenArrayList = fam.getChildren();
+
+            // only check if family has children
+            if (childrenArrayList != null) {
+                // convert to child array
+                String[] childrenArray = new String[childrenArrayList.size()];
+                childrenArray = childrenArrayList.toArray(childrenArray);
+
+                for (String childId : childrenArray) {
+                    GEDCOMIndividualRecord child = individuals.get(childId);
+
+                    // only check if child birthdate is provided (may be omitted)
+                    if (child.getBirth() != null) {
+                        // reset the age string and family string and counter
+                        if (!(fam.getUniqueId().equals(family))) {
+                            family = fam.getUniqueId();
+                            age = "";
+                            count = 0;
+                        }
+
+                        if (age.isEmpty()) {
+                            age = child.getBirth();
+                        } else {
+                            if (age.equals(child.getBirth())) {
+                                count++;
+                                if (count > 2) {
+                                    System.out.println("ERROR - Family " + fam.getUniqueId() + " has more "
+                                            + "than 3 children with the same birth date!");
+                                }
+                            } else {
+                                age = child.getBirth();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public void readFile(String file) throws IOException {
 
         FileInputStream fis = null;
