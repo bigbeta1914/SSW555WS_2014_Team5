@@ -137,7 +137,7 @@ public class GEDCOMFileReader {
 
                 // do the check
                 if (calendarDeath.before(calandarBirth)) {
-                    System.out.println("ERROR - DeathBeforeBirth: name = " + ind.getName() + " " + ind.getSurName()
+                    System.out.println("ERROR - DeathBeforeBirth: name = " + ind.getName()
                             + ", death date = " + ind.getDeath() + " is before birth date = " + ind.getBirth());
                 }
             }
@@ -172,7 +172,7 @@ public class GEDCOMFileReader {
                         Calendar calendarDeath = convertStringToDate(ind.getDeath());
                         // do the check
                         if (calendarDeath.before(calendarMarried)) {
-                            System.out.println("ERROR - DeathBeforeMarriage: name = " + ind.getName() + " " + ind.getSurName()
+                            System.out.println("ERROR - DeathBeforeMarriage: name = " + ind.getName()
                                     + ", death date = " + ind.getDeath() + " is before marriage date = " + fam.getMarried());
                         }
 
@@ -316,8 +316,7 @@ public class GEDCOMFileReader {
                             Calendar calendarChildBirth = convertStringToDate(child.getBirth());
                             // do the check
                             if (calendarChildBirth.before(calendarParentBirth)) {
-                                System.out.println("ERROR - ChildBirthBeforeParentBirth: child (" + child.getName() + " " + child.getSurName()
-                                        + ")birth date = " + child.getBirth() + " is before parent (" + parent.getName() + " " + parent.getSurName()
+                                System.out.println("ERROR - ChildBirthBeforeParentBirth: child (" + child.getName() + ") birth date = " + child.getBirth() + " is before parent (" + parent.getName() + " " + parent.getSurName()
                                         + ")birth date = " + parent.getBirth());
                             }
                         } // if( child.getBirth() != null)
@@ -342,8 +341,7 @@ public class GEDCOMFileReader {
                             Calendar calendarChildBirth = convertStringToDate(child.getBirth());
                             // do the check
                             if (calendarChildBirth.before(calendarParentBirth)) {
-                                System.out.println("ERROR - ChildBirthBeforeParentBirth: child (" + child.getName() + " " + child.getSurName()
-                                        + ")birth date = " + child.getBirth() + " is before parent (" + parent.getName() + " " + parent.getSurName()
+                                System.out.println("ERROR - ChildBirthBeforeParentBirth: child (" + child.getName() + ")birth date = " + child.getBirth() + " is before parent (" + parent.getName() + " " + parent.getSurName()
                                         + ")birth date = " + parent.getBirth());
                             }
                         } // if( child.getBirth() != null)
@@ -567,6 +565,55 @@ public class GEDCOMFileReader {
         }
     }
 
+    public void checkMarriedToChild() {
+        // get collection of families
+        Collection<GEDCOMFamilyRecord> famCollection = families.values();
+
+        // iterator for collection
+        Iterator<GEDCOMFamilyRecord> famIterator = famCollection.iterator();
+
+        // iterate through all families
+        while (famIterator.hasNext()) {
+            GEDCOMFamilyRecord fam = (GEDCOMFamilyRecord) famIterator.next();
+
+            // get children array
+            ArrayList<String> childrenArrayList = fam.getChildren();
+
+            // only check if family has children
+            if (childrenArrayList != null) {
+                // convert to child array, because I'm not sure how to work with an array list
+                String[] childrenArray = new String[childrenArrayList.size()];
+                childrenArray = childrenArrayList.toArray(childrenArray);
+
+                // get husband
+                GEDCOMIndividualRecord husband = individuals.get(fam.getHusband());
+                // get wife
+                GEDCOMIndividualRecord wife= individuals.get(fam.getWife());
+
+                // cycle through each child
+                for (String childId : childrenArray) {
+                	
+                    // if husband is also child, then wife is married to child (check fails)
+                    if ( husband.getUniqueId() == childId ) {
+                    	
+                    	GEDCOMIndividualRecord child = individuals.get(childId);
+                    	
+                        System.out.println("ERROR - MarriedToChild: Wife (" + wife.getName() + ") is married to child (" + child.getName() + ")");
+                    }
+                    
+                    // if wife is also child, then husband is married to child (check fails)
+                    if ( wife.getUniqueId() == childId ) {
+                    	
+                    	GEDCOMIndividualRecord child = individuals.get(childId);
+                    	
+                        System.out.println("ERROR - MarriedToChild: Husband (" + husband.getName() + ") is married to child (" + child.getName() + ")");
+                    }
+                    
+                } // for (String childId : childrenArray)
+            } // if( childrenArray != null )
+        } // while(famIterator.hasNext())
+    }
+    
     public void readFile(String file) throws IOException {
 
         FileInputStream fis = null;

@@ -33,8 +33,12 @@ public class MainProgram {
 			// check for same sex marriages with children
 			gcfr.checkSameSexMarriageWithChildren();
                         
-                        // check for parents who have more than three children with same birth date
-                        gcfr.checkMultiKidsBirthDate();
+            // check for parents who have more than three children with same birth date
+            gcfr.checkMultiKidsBirthDate();
+            
+            // check for parent married to thier child
+            gcfr.checkMarriedToChild();
+            
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
