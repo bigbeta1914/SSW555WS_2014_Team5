@@ -122,6 +122,15 @@
 1 BIRT
 2 DATE 25 JUL 1988
 1 FAMS @F3@
+0 NOTE Jim McOldman (ID = I8) is being used as a test for story US015 "age > 100" check
+0 @I8@ INDI
+1 NAME Jim /McOldman/
+2 GIVN Jim
+2 SURN McOldman
+1 SEX M
+1 BIRT
+2 DATE 25 JUL 1904
+1 FAMS @F3@
 0 NOTE John Smith is being used as a test for story US03 "death before marriage" check
 0 @F1@ FAM
 1 HUSB @I2@

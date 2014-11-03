@@ -137,7 +137,7 @@ public class GEDCOMFileReader {
 
                 // do the check
                 if (calendarDeath.before(calandarBirth)) {
-                    System.out.println("ERROR - DeathBeforeBirth: name = " + ind.getName()
+                    System.out.println("ERROR - DeathBeforeBirth: id = " + ind.getUniqueId()
                             + ", death date = " + ind.getDeath() + " is before birth date = " + ind.getBirth());
                 }
             }
@@ -172,7 +172,7 @@ public class GEDCOMFileReader {
                         Calendar calendarDeath = convertStringToDate(ind.getDeath());
                         // do the check
                         if (calendarDeath.before(calendarMarried)) {
-                            System.out.println("ERROR - DeathBeforeMarriage: name = " + ind.getName()
+                            System.out.println("ERROR - DeathBeforeMarriage: ID = " + ind.getUniqueId()
                                     + ", death date = " + ind.getDeath() + " is before marriage date = " + fam.getMarried());
                         }
 
@@ -212,7 +212,7 @@ public class GEDCOMFileReader {
                         Calendar calendarBirth = convertStringToDate(ind.getBirth());
                         // do the check
                         if (calendarMarried.before(calendarBirth)) {
-                            System.out.println("ERROR - MarriageBeforeBirth: name = " + ind.getName() + " " + ind.getSurName()
+                            System.out.println("ERROR - MarriageBeforeBirth: ID = " + ind.getUniqueId()
                                     + ", marriage date = " + fam.getMarried() + " is before birth date = " + ind.getBirth());
                         }
 
@@ -235,7 +235,7 @@ public class GEDCOMFileReader {
                 birth = new SimpleDateFormat("dd MMM yyyy").parse(ind.getBirth());
 
                 if (birth.after(new Date())) {
-                    System.out.println("ERROR - " + ind.getUniqueId() + " birth date is after current date.");
+                    System.out.println("ERROR - individual with ID = " + ind.getUniqueId() + " has birth date after current date.");
                 }
 
             }
@@ -247,7 +247,7 @@ public class GEDCOMFileReader {
                 death = new SimpleDateFormat("dd MMM yyyy").parse(ind.getDeath());
 
                 if (death.after(new Date())) {
-                    System.out.println("ERROR - " + ind.getUniqueId() + " death date is after current date.");
+                    System.out.println("ERROR - individual with ID = " + ind.getUniqueId() + " has death date after current date.");
                 }
             }
         }
@@ -316,8 +316,8 @@ public class GEDCOMFileReader {
                             Calendar calendarChildBirth = convertStringToDate(child.getBirth());
                             // do the check
                             if (calendarChildBirth.before(calendarParentBirth)) {
-                                System.out.println("ERROR - ChildBirthBeforeParentBirth: child (" + child.getName() + ") birth date = " + child.getBirth() + " is before parent (" + parent.getName() + " " + parent.getSurName()
-                                        + ")birth date = " + parent.getBirth());
+                                System.out.println("ERROR - ChildBirthBeforeParentBirth: child (" + child.getUniqueId() + ") birth date = " + child.getBirth() + " is before parent (" + parent.getUniqueId()
+                                        + ") birth date = " + parent.getBirth());
                             }
                         } // if( child.getBirth() != null)
                     } // for( int i = 0; i < childrenArray.size(); i++ )
@@ -341,8 +341,8 @@ public class GEDCOMFileReader {
                             Calendar calendarChildBirth = convertStringToDate(child.getBirth());
                             // do the check
                             if (calendarChildBirth.before(calendarParentBirth)) {
-                                System.out.println("ERROR - ChildBirthBeforeParentBirth: child (" + child.getName() + ")birth date = " + child.getBirth() + " is before parent (" + parent.getName() + " " + parent.getSurName()
-                                        + ")birth date = " + parent.getBirth());
+                                System.out.println("ERROR - ChildBirthBeforeParentBirth: child (" + child.getUniqueId() + ") birth date = " + child.getBirth() + " is before parent (" + parent.getUniqueId()
+                                        + ") birth date = " + parent.getBirth());
                             }
                         } // if( child.getBirth() != null)
                     } // for( int i = 0; i < childrenArray.size(); i++ )
@@ -371,13 +371,28 @@ public class GEDCOMFileReader {
                 // convert member birth to Calendar object
                 Calendar calendarParentBirth = convertStringToDate(father.getBirth());
                 // get the members age (1000 ms = 1 sec) -> (60 sec = 1 min) -> (60 min = 1 hour) -> (24 hour = 1 day) -> (365.242 days = 1 year)
-                Date date = calendarParentBirth.getTime();
-                age = (int) (date.getTime() / 1000 / 60 / 60 / 24 / 365.242);
-                if (age < 0) {
-                    age = age * -1;
-                }
-                if (age >= 100) {
-                    System.out.println("ERROR - isAgeGreaterThan100: " + father.getName() + " claims to be over 100 years old!");
+                
+                // -------------------------------------------------------
+                // ssonntag - Not working (?) 
+//                Date date = calendarParentBirth.getTime();
+//                age = (int) (date.getTime() / 1000 / 60 / 60 / 24 / 365.242);
+//                System.out.println("id = " + father.getUniqueId() + ", age = " + age);
+//                if (age < 0) {
+//                    age = age * -1;
+//                }
+//                if (age >= 100) {
+//                    System.out.println("ANOMALY - isAgeGreaterThan100: individual with ID = " + father.getUniqueId() + " claims to be over 100 years old!");
+//                }
+                // ------------------------------------------------------------
+                
+                // ssonntag - get today's date
+                Calendar todayMinus100Years = Calendar.getInstance();
+                // ssonntag - subtract 100 years
+                todayMinus100Years.set(Calendar.YEAR, todayMinus100Years.get(Calendar.YEAR) - 100);
+                
+                if(calendarParentBirth.before(todayMinus100Years))
+                {
+                	System.out.println("ANOMALY - over100: individual with ID = " + father.getUniqueId() + " claims to be over 100");
                 }
             }
 
@@ -388,15 +403,32 @@ public class GEDCOMFileReader {
             if (mother.getBirth() != null) {
                 // convert member birth to Calendar object
                 Calendar calendarParentBirth = convertStringToDate(mother.getBirth());
+                
+                // -------------------------------------------------------
+                // ssonntag - Not working (?) 
                 // get the members age (1000 ms = 1 sec) -> (60 sec = 1 min) -> (60 min = 1 hour) -> (24 hour = 1 day) -> (365.242 days = 1 year)
-                Date date = calendarParentBirth.getTime();
-                age = (int) (date.getTime() / 1000 / 60 / 60 / 24 / 365.242);
-                if (age < 0) {
-                    age = age * -1;
+//                Date date = calendarParentBirth.getTime();
+//                age = (int) (date.getTime() / 1000 / 60 / 60 / 24 / 365.242);
+//                System.out.println("id = " + mother.getUniqueId() + ", age = " + age);
+//                if (age < 0) {
+//                    age = age * -1;
+//                }
+//                if (age >= 100) {
+//                    System.out.println("ANOMALY - isAgeGreaterThan100: individual with ID = " + mother.getUniqueId() + " claims to be over 100 years old!");
+//                }
+                
+                // ------------------------------------------------------------
+                
+                // ssonntag - get today's date
+                Calendar todayMinus100Years = Calendar.getInstance();
+                // ssonntag - subtract 100 years
+                todayMinus100Years.set(Calendar.YEAR, todayMinus100Years.get(Calendar.YEAR) - 100);
+                
+                if(calendarParentBirth.before(todayMinus100Years))
+                {
+                	System.out.println("ANOMALY - over100: individual with ID = " + mother.getUniqueId() + " claims to be over 100");
                 }
-                if (age >= 100) {
-                    System.out.println("ERROR - isAgeGreaterThan100: " + mother.getName() + " claims to be over 100 years old!");
-                }
+                
             }
 
             // get children
@@ -415,15 +447,32 @@ public class GEDCOMFileReader {
                     if (child.getBirth() != null) {
                         // convert member birth to Calendar object
                         Calendar calendarParentBirth = convertStringToDate(child.getBirth());
+                        
+                        // -------------------------------------------------------
+                        // ssonntag - Not working (?) 
                         // get the members age (1000 ms = 1 sec) -> (60 sec = 1 min) -> (60 min = 1 hour) -> (24 hour = 1 day) -> (365.242 days = 1 year)
-                        Date date = calendarParentBirth.getTime();
-                        age = (int) (date.getTime() / 1000 / 60 / 60 / 24 / 365.242);
-                        if (age < 0) {
-                            age = age * -1;
+//                        Date date = calendarParentBirth.getTime();
+//                        age = (int) (date.getTime() / 1000 / 60 / 60 / 24 / 365.242);
+//                        System.out.println("id = " + child.getUniqueId() + ", age = " + age);
+//                        if (age < 0) {
+//                            age = age * -1;
+//                        }
+//                        if (age >= 100) {
+//                            System.out.println("ANNOMALY - isAgeGreaterThan100: individual with ID = " + child.getUniqueId() + " claims to be over 100 years old!");
+//                        }
+                        
+                     // ------------------------------------------------------------
+                        
+                        // ssonntag - get today's date
+                        Calendar todayMinus100Years = Calendar.getInstance();
+                        // ssonntag - subtract 100 years
+                        todayMinus100Years.set(Calendar.YEAR, todayMinus100Years.get(Calendar.YEAR) - 100);
+                        
+                        if(calendarParentBirth.before(todayMinus100Years))
+                        {
+                        	System.out.println("ANOMALY - over100: individual with ID = " + child.getUniqueId() + " claims to be over 100");
                         }
-                        if (age >= 100) {
-                            System.out.println("ERROR - isAgeGreaterThan100: " + child.getName() + " claims to be over 100 years old!");
-                        }
+                        
                     }
                 }
             }
@@ -442,41 +491,80 @@ public class GEDCOMFileReader {
         while (famIterator.hasNext()) {
             GEDCOMFamilyRecord fam = (GEDCOMFamilyRecord) famIterator.next();
 
-            // get husband
-            GEDCOMIndividualRecord father = individuals.get(fam.getHusband());
+            // get children array
+            ArrayList<String> childrenArrayList = fam.getChildren();
 
-            // get wife
-            GEDCOMIndividualRecord mother = individuals.get(fam.getWife());
-
-            // only continue if father's birthdate is provided (may be omitted)
-            if (father.getBirth() != null) {
-                // convert member birth to Calendar object
-                Calendar calendarParentBirth = convertStringToDate(father.getBirth());
-                // get the members age (1000 ms = 1 sec) -> (60 sec = 1 min) -> (60 min = 1 hour) -> (24 hour = 1 day) -> (365.242 days = 1 year)
-                Date date = calendarParentBirth.getTime();
-                age = (int) (date.getTime() / 1000 / 60 / 60 / 24 / 365.242);
-                if (age < 0) {
-                    age = age * -1;
-                }
-                if (age <= 13) {
-                    System.out.println("ERROR - isParentAgeIsLessThan13: " + father.getName() + " claims to be 13 years or younger!");
-                }
-            }
-
-            // only continue if mother's birthdate is provided (may be omitted)
-            if (mother.getBirth() != null) {
-                // convert member birth to Calendar object
-                Calendar calendarParentBirth = convertStringToDate(mother.getBirth());
-                // get the members age (1000 ms = 1 sec) -> (60 sec = 1 min) -> (60 min = 1 hour) -> (24 hour = 1 day) -> (365.242 days = 1 year)
-                Date date = calendarParentBirth.getTime();
-                age = (int) (date.getTime() / 1000 / 60 / 60 / 24 / 365.242);
-                if (age < 0) {
-                    age = age * -1;
-                }
-                if (age <= 13) {
-                    System.out.println("ERROR - isParentAgeIsLessThan13: " + mother.getName() + " claims to be 13 years or younger!");
-                }
-            }
+            // only check if family has children
+            if (childrenArrayList != null) {
+            	
+	            // get husband
+	            GEDCOMIndividualRecord father = individuals.get(fam.getHusband());
+	
+	            // get wife
+	            GEDCOMIndividualRecord mother = individuals.get(fam.getWife());
+	
+	            // only continue if father's birthdate is provided (may be omitted)
+	            if (father.getBirth() != null) {
+	                // convert member birth to Calendar object
+	                Calendar calendarParentBirth = convertStringToDate(father.getBirth());
+	                
+	                // ------------------------------------------------------------
+	                // ssonntag - not working (?)
+	                // get the members age (1000 ms = 1 sec) -> (60 sec = 1 min) -> (60 min = 1 hour) -> (24 hour = 1 day) -> (365.242 days = 1 year)
+	//                Date date = calendarParentBirth.getTime();
+	//                age = (int) (date.getTime() / 1000 / 60 / 60 / 24 / 365.242);
+	//                if (age < 0) {
+	//                    age = age * -1;
+	//                }
+	//                if (age <= 13) {
+	//                    System.out.println("ANOMALY - isParentAgeIsLessThan13: individual with ID = " + father.getUniqueId() + " claims to be 13 years or younger!");
+	//                }
+	                
+	                // ------------------------------------------------------------
+	                
+	                // ssonntag - get today's date
+	                Calendar today = Calendar.getInstance();
+	                // ssonntag - get today minus 13 years
+	                Calendar todayMinus13Years = Calendar.getInstance();
+	                todayMinus13Years.set(Calendar.YEAR, todayMinus13Years.get(Calendar.YEAR) - 13);
+	                
+	                if(calendarParentBirth.after(todayMinus13Years) && calendarParentBirth.before(today))
+	                {
+	                	System.out.println("ANOMALY - parentUnder13: parent (individual) with ID = " + father.getUniqueId() + " claims to be under 13");
+	                }
+	            }
+	
+	            // only continue if mother's birthdate is provided (may be omitted)
+	            if (mother.getBirth() != null) {
+	                // convert member birth to Calendar object
+	                Calendar calendarParentBirth = convertStringToDate(mother.getBirth());
+	                
+	                // ------------------------------------------------------------
+	                // ssonntag - not working
+	                // get the members age (1000 ms = 1 sec) -> (60 sec = 1 min) -> (60 min = 1 hour) -> (24 hour = 1 day) -> (365.242 days = 1 year)
+	//                Date date = calendarParentBirth.getTime();
+	//                age = (int) (date.getTime() / 1000 / 60 / 60 / 24 / 365.242);
+	//                if (age < 0) {
+	//                    age = age * -1;
+	//                }
+	//                if (age <= 13) {
+	//                    System.out.println("ANOMALY - isParentAgeIsLessThan13: individual with IDE = " + mother.getUniqueId() + " claims to be 13 years or younger!");
+	//                }
+	                
+	                // ------------------------------------------------------------
+	                
+	                // ssonntag - get today's date
+	                Calendar today = Calendar.getInstance();
+	                // ssonntag - get today minus 13 years
+	                Calendar todayMinus13Years = Calendar.getInstance();
+	                todayMinus13Years.set(Calendar.YEAR, todayMinus13Years.get(Calendar.YEAR) - 13);
+	                
+	                if(calendarParentBirth.after(todayMinus13Years) && calendarParentBirth.before(today))
+	                {
+	                	System.out.println("ANOMALY - parentUnder13: parent (individual) with ID = " + mother.getUniqueId() + " claims to be under 13");
+	                }
+	            }
+            } // if (childrenArrayList != null) 
         }
     }
 
@@ -495,10 +583,10 @@ public class GEDCOMFileReader {
                     GEDCOMIndividualRecord wife = (GEDCOMIndividualRecord) individuals.get(fam.getWife());
 
                     if (husband.getSex().equals(wife.getSex())) {
-                        System.out.println("ERROR - " + fam.getUniqueId() + " family has same sex marrige with husband: " + husband.getUniqueId() + " and wife: " + wife.getUniqueId());
+                        System.out.println("ANOMALY - " + fam.getUniqueId() + " family has same sex marrige with husband: " + husband.getUniqueId() + " and wife: " + wife.getUniqueId());
 
                         if (fam.getChildren().size() > 0) {
-                            System.out.println("ERROR - " + fam.getUniqueId() + " family has same sex marrige with children!");
+                            System.out.println("ANOMALY - " + fam.getUniqueId() + " family has same sex marrige with children!");
                         }
                     }
                 }
@@ -552,7 +640,7 @@ public class GEDCOMFileReader {
                             if (age.equals(child.getBirth())) {
                                 count++;
                                 if (count > 2) {
-                                    System.out.println("ERROR - Family " + fam.getUniqueId() + " has more "
+                                    System.out.println("ANAMOLY - Family " + fam.getUniqueId() + " has more "
                                             + "than 3 children with the same birth date!");
                                 }
                             } else {
@@ -589,24 +677,30 @@ public class GEDCOMFileReader {
                 GEDCOMIndividualRecord husband = individuals.get(fam.getHusband());
                 // get wife
                 GEDCOMIndividualRecord wife= individuals.get(fam.getWife());
-
+                
+                // uncomment to print IDs for debug
+                // System.out.println("husb id = " + husband.getUniqueId() + ", wife id = " + wife.getUniqueId());
+                		
                 // cycle through each child
-                for (String childId : childrenArray) {
+                for (String childId : childrenArray){
+                	
+                	// uncomment to print id for debug
+                	// System.out.println("child id = " + childId);
                 	
                     // if husband is also child, then wife is married to child (check fails)
-                    if ( husband.getUniqueId() == childId ) {
+                    if ( 0 == husband.getUniqueId().compareTo(childId) ) {
                     	
                     	GEDCOMIndividualRecord child = individuals.get(childId);
                     	
-                        System.out.println("ERROR - MarriedToChild: Wife (" + wife.getName() + ") is married to child (" + child.getName() + ")");
+                        System.out.println("ERROR - MarriedToChild: Wife ( ID = " + wife.getUniqueId() + ") is married to child (ID = " + child.getUniqueId() + ")");
                     }
                     
                     // if wife is also child, then husband is married to child (check fails)
-                    if ( wife.getUniqueId() == childId ) {
+                    if ( 0 == wife.getUniqueId().compareTo(childId) ) {
                     	
                     	GEDCOMIndividualRecord child = individuals.get(childId);
                     	
-                        System.out.println("ERROR - MarriedToChild: Husband (" + husband.getName() + ") is married to child (" + child.getName() + ")");
+                        System.out.println("ERROR - MarriedToChild: Husband ( ID = " + husband.getUniqueId() + ") is married to child (ID = " + child.getUniqueId() + ")");
                     }
                     
                 } // for (String childId : childrenArray)
