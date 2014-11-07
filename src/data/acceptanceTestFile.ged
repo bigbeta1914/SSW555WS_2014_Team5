@@ -20,7 +20,7 @@
 1 BIRT
 2 DATE 9 OCT 1913
 1 FAMC @F1@
-0 NOTE John Smith is being used as a test for story US03 "death before marriage" check
+0 NOTE I2 John Smith is being used as a test for story US03 "death before marriage" check
 0 @I2@ INDI
 1 NAME John /Smith/
 2 GIVN John
@@ -131,6 +131,36 @@
 1 BIRT
 2 DATE 25 JUL 1904
 1 FAMS @F3@
+0 NOTE I9 Bill Buckner is being used as a test for story US09 "Married to Yourself" check
+0 @I9@ INDI
+1 NAME Bill /Buckner/
+2 GIVN Bill
+2 SURN Buckner
+2 _MARNM Buckner
+1 SEX M
+1 BIRT
+2 DATE 3 JUN 1979
+1 FAMC @F4@
+0 NOTE I10 Jim Beam is being used as a test for story US10 "Child of Yourself" check
+0 @I10@ INDI
+1 NAME Jim /Beam/
+2 GIVN Jim
+2 SURN Beam
+2 _MARNM Beam
+1 SEX M
+1 BIRT
+2 DATE 16 SEP 1982
+1 FAMC @F5@
+0 NOTE I11 Janis Joplin is in family with Jim Beam, being used for story US10 "Child of Yourself" check
+0 @I11@ INDI
+1 NAME Janis /Joplin/
+2 GIVN Janis
+2 SURN Joplin
+2 _MARNM Beam
+1 SEX F
+1 BIRT
+2 DATE 25 JUL 1982
+1 FAMS @F5@
 0 NOTE John Smith is being used as a test for story US03 "death before marriage" check
 0 @F1@ FAM
 1 HUSB @I2@
@@ -167,4 +197,19 @@
 2 TYPE Ending
 2 DATE 12 JUN 2009
 1 _CURRENT N
+0 NOTE Family F4 has Bill Buckner, used as a test for story US09 "Married to Yourself" check
+0 @F4@ FAM
+1 HUSB @I9@
+1 WIFE @I9@
+1 MARR
+2 DATE 13 JUL 2014
+1 _CURRENT Y
+0 NOTE Family F5 is being used as a test for story US10 "Child of yourself" check
+0 @F5@ FAM
+1 HUSB @I10@
+1 WIFE @I11@
+1 CHIL @I10@
+1 MARR
+2 DATE 11 JUN 2011
+1 _CURRENT Y
 0 TRLR
