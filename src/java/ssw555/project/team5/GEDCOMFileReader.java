@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.LinkedHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -352,7 +354,7 @@ public class GEDCOMFileReader {
     }
 
     public void isAgeGreaterThan100() {
-        double age;
+        int age;
         // get collection of families
         Collection<GEDCOMFamilyRecord> famCollection = families.values();
 
@@ -368,31 +370,9 @@ public class GEDCOMFileReader {
 
             // only continue if father's birthdate is provided (may be omitted)
             if (father.getBirth() != null) {
-                // convert member birth to Calendar object
-                Calendar calendarParentBirth = convertStringToDate(father.getBirth());
-                // get the members age (1000 ms = 1 sec) -> (60 sec = 1 min) -> (60 min = 1 hour) -> (24 hour = 1 day) -> (365.242 days = 1 year)
-                
-                // -------------------------------------------------------
-                // ssonntag - Not working (?) 
-//                Date date = calendarParentBirth.getTime();
-//                age = (int) (date.getTime() / 1000 / 60 / 60 / 24 / 365.242);
-//                System.out.println("id = " + father.getUniqueId() + ", age = " + age);
-//                if (age < 0) {
-//                    age = age * -1;
-//                }
-//                if (age >= 100) {
-//                    System.out.println("ANOMALY - isAgeGreaterThan100: individual with ID = " + father.getUniqueId() + " claims to be over 100 years old!");
-//                }
-                // ------------------------------------------------------------
-                
-                // ssonntag - get today's date
-                Calendar todayMinus100Years = Calendar.getInstance();
-                // ssonntag - subtract 100 years
-                todayMinus100Years.set(Calendar.YEAR, todayMinus100Years.get(Calendar.YEAR) - 100);
-                
-                if(calendarParentBirth.before(todayMinus100Years))
-                {
-                	System.out.println("ANOMALY - over100: individual with ID = " + father.getUniqueId() + " claims to be over 100");
+                age = getAge(father.getBirth());
+                if (age > 100) {
+                    System.out.println("ANOMALY - isAgeGreaterThan100: individual with ID = " + father.getUniqueId() + " claims to be over 100 years old!");
                 }
             }
 
@@ -401,34 +381,10 @@ public class GEDCOMFileReader {
 
             // only continue if mother's birthdate is provided (may be omitted)
             if (mother.getBirth() != null) {
-                // convert member birth to Calendar object
-                Calendar calendarParentBirth = convertStringToDate(mother.getBirth());
-                
-                // -------------------------------------------------------
-                // ssonntag - Not working (?) 
-                // get the members age (1000 ms = 1 sec) -> (60 sec = 1 min) -> (60 min = 1 hour) -> (24 hour = 1 day) -> (365.242 days = 1 year)
-//                Date date = calendarParentBirth.getTime();
-//                age = (int) (date.getTime() / 1000 / 60 / 60 / 24 / 365.242);
-//                System.out.println("id = " + mother.getUniqueId() + ", age = " + age);
-//                if (age < 0) {
-//                    age = age * -1;
-//                }
-//                if (age >= 100) {
-//                    System.out.println("ANOMALY - isAgeGreaterThan100: individual with ID = " + mother.getUniqueId() + " claims to be over 100 years old!");
-//                }
-                
-                // ------------------------------------------------------------
-                
-                // ssonntag - get today's date
-                Calendar todayMinus100Years = Calendar.getInstance();
-                // ssonntag - subtract 100 years
-                todayMinus100Years.set(Calendar.YEAR, todayMinus100Years.get(Calendar.YEAR) - 100);
-                
-                if(calendarParentBirth.before(todayMinus100Years))
-                {
-                	System.out.println("ANOMALY - over100: individual with ID = " + mother.getUniqueId() + " claims to be over 100");
+                age = getAge(mother.getBirth());
+                if (age > 100) {
+                    System.out.println("ANOMALY - isAgeGreaterThan100: individual with ID = " + mother.getUniqueId() + " claims to be over 100 years old!");
                 }
-                
             }
 
             // get children
@@ -445,38 +401,56 @@ public class GEDCOMFileReader {
 
                     // only check if child birthdate is provided (may be omitted)
                     if (child.getBirth() != null) {
-                        // convert member birth to Calendar object
-                        Calendar calendarParentBirth = convertStringToDate(child.getBirth());
-                        
-                        // -------------------------------------------------------
-                        // ssonntag - Not working (?) 
-                        // get the members age (1000 ms = 1 sec) -> (60 sec = 1 min) -> (60 min = 1 hour) -> (24 hour = 1 day) -> (365.242 days = 1 year)
-//                        Date date = calendarParentBirth.getTime();
-//                        age = (int) (date.getTime() / 1000 / 60 / 60 / 24 / 365.242);
-//                        System.out.println("id = " + child.getUniqueId() + ", age = " + age);
-//                        if (age < 0) {
-//                            age = age * -1;
-//                        }
-//                        if (age >= 100) {
-//                            System.out.println("ANNOMALY - isAgeGreaterThan100: individual with ID = " + child.getUniqueId() + " claims to be over 100 years old!");
-//                        }
-                        
-                     // ------------------------------------------------------------
-                        
-                        // ssonntag - get today's date
-                        Calendar todayMinus100Years = Calendar.getInstance();
-                        // ssonntag - subtract 100 years
-                        todayMinus100Years.set(Calendar.YEAR, todayMinus100Years.get(Calendar.YEAR) - 100);
-                        
-                        if(calendarParentBirth.before(todayMinus100Years))
-                        {
-                        	System.out.println("ANOMALY - over100: individual with ID = " + child.getUniqueId() + " claims to be over 100");
+                        age = getAge(child.getBirth());
+                        if (age > 100) {
+                            System.out.println("ANOMALY - isAgeGreaterThan100: individual with ID = " + child.getUniqueId() + " claims to be over 100 years old!");
                         }
-                        
                     }
                 }
             }
         }
+    }
+
+    public int getAge(String birthday) {
+        LocalDate now = LocalDate.now();
+        String[] parseLine = (birthday.split("\\s+"));
+        int birthDay = Integer.valueOf(parseLine[0]);
+        int birthMonth = convertMonthToNumber(birthday);
+        int birthYear = Integer.valueOf(parseLine[2]);
+        LocalDate birthdate = LocalDate.of(birthYear, birthMonth, birthDay); //year, month, day
+        Period p = Period.between(birthdate, now);
+        return p.getYears();
+    }
+
+    public int convertMonthToNumber(String birthday) {
+        String[] parseLine = (birthday.split("\\s+"));
+        switch (parseLine[1]) {
+            case "JAN":
+                return 1;
+            case "FEB":
+                return 2;
+            case "MAR":
+                return 3;
+            case "APR":
+                return 4;
+            case "MAY":
+                return 5;
+            case "JUN":
+                return 6;
+            case "JUL":
+                return 7;
+            case "AUG":
+                return 8;
+            case "SEP":
+                return 9;
+            case "OCT":
+                return 10;
+            case "NOV":
+                return 11;
+            case "DEC":
+                return 12;
+        }
+        return 0;
     }
 
     public void isParentAgeIsLessThan13() {
@@ -496,75 +470,29 @@ public class GEDCOMFileReader {
 
             // only check if family has children
             if (childrenArrayList != null) {
-            	
-	            // get husband
-	            GEDCOMIndividualRecord father = individuals.get(fam.getHusband());
-	
-	            // get wife
-	            GEDCOMIndividualRecord mother = individuals.get(fam.getWife());
-	
-	            // only continue if father's birthdate is provided (may be omitted)
-	            if (father.getBirth() != null) {
-	                // convert member birth to Calendar object
-	                Calendar calendarParentBirth = convertStringToDate(father.getBirth());
-	                
-	                // ------------------------------------------------------------
-	                // ssonntag - not working (?)
-	                // get the members age (1000 ms = 1 sec) -> (60 sec = 1 min) -> (60 min = 1 hour) -> (24 hour = 1 day) -> (365.242 days = 1 year)
-	//                Date date = calendarParentBirth.getTime();
-	//                age = (int) (date.getTime() / 1000 / 60 / 60 / 24 / 365.242);
-	//                if (age < 0) {
-	//                    age = age * -1;
-	//                }
-	//                if (age <= 13) {
-	//                    System.out.println("ANOMALY - isParentAgeIsLessThan13: individual with ID = " + father.getUniqueId() + " claims to be 13 years or younger!");
-	//                }
-	                
-	                // ------------------------------------------------------------
-	                
-	                // ssonntag - get today's date
-	                Calendar today = Calendar.getInstance();
-	                // ssonntag - get today minus 13 years
-	                Calendar todayMinus13Years = Calendar.getInstance();
-	                todayMinus13Years.set(Calendar.YEAR, todayMinus13Years.get(Calendar.YEAR) - 13);
-	                
-	                if(calendarParentBirth.after(todayMinus13Years) && calendarParentBirth.before(today))
-	                {
-	                	System.out.println("ANOMALY - parentUnder13: parent (individual) with ID = " + father.getUniqueId() + " claims to be under 13");
-	                }
-	            }
-	
-	            // only continue if mother's birthdate is provided (may be omitted)
-	            if (mother.getBirth() != null) {
-	                // convert member birth to Calendar object
-	                Calendar calendarParentBirth = convertStringToDate(mother.getBirth());
-	                
-	                // ------------------------------------------------------------
-	                // ssonntag - not working
-	                // get the members age (1000 ms = 1 sec) -> (60 sec = 1 min) -> (60 min = 1 hour) -> (24 hour = 1 day) -> (365.242 days = 1 year)
-	//                Date date = calendarParentBirth.getTime();
-	//                age = (int) (date.getTime() / 1000 / 60 / 60 / 24 / 365.242);
-	//                if (age < 0) {
-	//                    age = age * -1;
-	//                }
-	//                if (age <= 13) {
-	//                    System.out.println("ANOMALY - isParentAgeIsLessThan13: individual with IDE = " + mother.getUniqueId() + " claims to be 13 years or younger!");
-	//                }
-	                
-	                // ------------------------------------------------------------
-	                
-	                // ssonntag - get today's date
-	                Calendar today = Calendar.getInstance();
-	                // ssonntag - get today minus 13 years
-	                Calendar todayMinus13Years = Calendar.getInstance();
-	                todayMinus13Years.set(Calendar.YEAR, todayMinus13Years.get(Calendar.YEAR) - 13);
-	                
-	                if(calendarParentBirth.after(todayMinus13Years) && calendarParentBirth.before(today))
-	                {
-	                	System.out.println("ANOMALY - parentUnder13: parent (individual) with ID = " + mother.getUniqueId() + " claims to be under 13");
-	                }
-	            }
-            } // if (childrenArrayList != null) 
+
+                // get husband
+                GEDCOMIndividualRecord father = individuals.get(fam.getHusband());
+
+                // get wife
+                GEDCOMIndividualRecord mother = individuals.get(fam.getWife());
+
+                // only continue if father's birthdate is provided (may be omitted)
+                if (father.getBirth() != null) {
+                    age = getAge(father.getBirth());
+                    if (age < 13) {
+                        System.out.println("ANOMALY - parentUnder13: parent (individual) with ID = " + father.getUniqueId() + " claims to be under 13");
+                    }
+                }
+
+                // only continue if mother's birthdate is provided (may be omitted)
+                if (mother.getBirth() != null) {
+                    age = getAge(mother.getBirth());
+                    if (age < 13) {
+                        System.out.println("ANOMALY - parentUnder13: parent (individual) with ID = " + mother.getUniqueId() + " claims to be under 13");
+                    }
+                }
+            }
         }
     }
 
