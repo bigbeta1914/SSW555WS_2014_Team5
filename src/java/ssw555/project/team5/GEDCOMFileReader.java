@@ -522,6 +522,48 @@ public class GEDCOMFileReader {
         }
     }
 
+	public void checkMarriedToSelf(){
+		for(String key : families.keySet()){
+			GEDCOMFamilyRecord fam = (GEDCOMFamilyRecord) families.get(key);
+			
+			if(isNullOrBlank(fam.getHusband())){
+				
+			} else {
+				GEDCOMIndividualRecord husband = (GEDCOMIndividualRecord) individuals.get(fam.getHusband());
+				
+				if(isNullOrBlank(fam.getWife())){
+					
+				} else {
+					GEDCOMIndividualRecord wife = (GEDCOMIndividualRecord) individuals.get(fam.getWife());
+									
+					if(husband.getUniqueId().equals(wife.getUniqueId())){
+						System.out.println("ERROR: " + husband.getUniqueId() + " listed as husband and wife to family " + fam.getUniqueId());
+					}
+				}
+			}			
+		}
+	}
+
+	public void checkChildOfSelf(){
+		for(String key : families.keySet()){
+			GEDCOMFamilyRecord fam = (GEDCOMFamilyRecord) families.get(key);
+			
+			if(fam.getChildren().size() > 0){
+				ArrayList <String> children = fam.getChildren();
+				
+				for(int i=0; i<children.size(); i++){
+					
+					if(!isNullOrBlank(fam.getHusband()) || !isNullOrBlank(fam.getWife())){
+						if(children.get(i).equalsIgnoreCase(fam.getHusband()) || children.get(i).equalsIgnoreCase(fam.getWife())){
+							System.out.println("ERROR: " + children.get(i) + " listed as parent and child to family " + fam.getUniqueId());	
+						}
+					}
+				}
+					
+			}
+		}			
+	}
+
     public void checkMultiKidsBirthDate() {
         int count = 0;
         String age = "";
