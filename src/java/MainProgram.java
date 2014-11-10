@@ -36,8 +36,14 @@ public class MainProgram {
             // check for parents who have more than three children with same birth date
             gcfr.checkMultiKidsBirthDate();
             
-            // check for parent married to thier child
+            // check for parent married to their child
             gcfr.checkMarriedToChild();
+            
+            // check individual married to self
+            gcfr.checkMarriedToSelf();
+            
+            //check individual is child of self
+            gcfr.checkChildOfSelf();
             
 
 		} catch (IOException e) {
