@@ -748,7 +748,11 @@ public class GEDCOMFileReader {
                             case "SEX":
                                 ind.setSex(currentGEDCOMObj.getArguments());
                                 break;
-
+                                
+                            case "DEAT":
+        						ind.setIsDead(currentGEDCOMObj.getArguments());
+        						break;
+        						
                             case "FAMS":
                                 ind.setFamilySpouseOf(retrieveXrefId(currentGEDCOMObj.getArguments()));
                                 break;

@@ -9,6 +9,7 @@ public class GEDCOMIndividualRecord extends GEDCOMRecord {
 	private String marriedName;
 	private String sex;
 	private String birth;
+	private String isDead;
 	private String death;
 	private ArrayList <String> familyChildOf = new ArrayList <String> ();
 	private ArrayList <String> familySpouseOf = new ArrayList <String> ();
@@ -48,6 +49,12 @@ public class GEDCOMIndividualRecord extends GEDCOMRecord {
 	}
 	public void setBirth(String birth) {
 		this.birth = birth;
+	}
+	public String getIsDead() {
+		return isDead;
+	}
+	public void setIsDead(String isDead) {
+		this.isDead = isDead;
 	}
 	public String getDeath() {
 		return death;
