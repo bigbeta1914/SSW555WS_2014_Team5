@@ -537,7 +537,7 @@ public class GEDCOMFileReader {
 					GEDCOMIndividualRecord wife = (GEDCOMIndividualRecord) individuals.get(fam.getWife());
 									
 					if(husband.getUniqueId().equals(wife.getUniqueId())){
-						System.out.println("ERROR: " + husband.getUniqueId() + " listed as husband and wife to family " + fam.getUniqueId());
+						System.out.println("ERROR - " + husband.getUniqueId() + " listed as husband and wife to family " + fam.getUniqueId());
 					}
 				}
 			}			
@@ -555,7 +555,7 @@ public class GEDCOMFileReader {
 					
 					if(!isNullOrBlank(fam.getHusband()) || !isNullOrBlank(fam.getWife())){
 						if(children.get(i).equalsIgnoreCase(fam.getHusband()) || children.get(i).equalsIgnoreCase(fam.getWife())){
-							System.out.println("ERROR: " + children.get(i) + " listed as parent and child to family " + fam.getUniqueId());	
+							System.out.println("ERROR - " + children.get(i) + " listed as parent and child to family " + fam.getUniqueId());	
 						}
 					}
 				}
