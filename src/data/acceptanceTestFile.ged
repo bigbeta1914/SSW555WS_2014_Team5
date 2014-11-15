@@ -29,8 +29,8 @@
 1 SEX M
 1 BIRT
 2 DATE 4 APR 1944
-1 DEAT Y
-2 DATE 7 JUN 1969
+0 NOTE REMOVE THIS COMMENT FOR DEATH: 1 DEAT Y -----------------------------------------------
+0 NOTE REMOVE THIS COMMENT FOR DEATH: 2 DATE 7 JUN 1969 --------------------------------------
 1 FAMS @F1@
 1 FAMS @F2@
 0 NOTE Jane Doe is being used as a test for story US02 "death before birth" check
@@ -43,8 +43,8 @@
 1 SEX M
 1 BIRT
 2 DATE 11 SEP 1947
-1 DEAT N
-2 DATE 7 JUN 1945
+0 NOTE REMOVE THIS COMMENT FOR DEATH: 1 DEAT Y ------------------------------------------------
+0 NOTE REMOVE THIS COMMENT FOR DEATH: 2 DATE 7 JUN 1945 ---------------------------------------
 1 FAMS @F1@
 0 NOTE Mary Mack is being used as a test for story US08 "No date after present" check
 0 @I4@ INDI

@@ -16,7 +16,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import ssw555.project.team5.model.GEDCOMFamilyRecord;
 import ssw555.project.team5.model.GEDCOMIndividualRecord;
@@ -522,47 +524,47 @@ public class GEDCOMFileReader {
         }
     }
 
-	public void checkMarriedToSelf(){
-		for(String key : families.keySet()){
-			GEDCOMFamilyRecord fam = (GEDCOMFamilyRecord) families.get(key);
-			
-			if(isNullOrBlank(fam.getHusband())){
-				
-			} else {
-				GEDCOMIndividualRecord husband = (GEDCOMIndividualRecord) individuals.get(fam.getHusband());
-				
-				if(isNullOrBlank(fam.getWife())){
-					
-				} else {
-					GEDCOMIndividualRecord wife = (GEDCOMIndividualRecord) individuals.get(fam.getWife());
-									
-					if(husband.getUniqueId().equals(wife.getUniqueId())){
-						System.out.println("ERROR - " + husband.getUniqueId() + " listed as husband and wife to family " + fam.getUniqueId());
-					}
-				}
-			}			
-		}
-	}
+    public void checkMarriedToSelf() {
+        for (String key : families.keySet()) {
+            GEDCOMFamilyRecord fam = (GEDCOMFamilyRecord) families.get(key);
 
-	public void checkChildOfSelf(){
-		for(String key : families.keySet()){
-			GEDCOMFamilyRecord fam = (GEDCOMFamilyRecord) families.get(key);
-			
-			if(fam.getChildren().size() > 0){
-				ArrayList <String> children = fam.getChildren();
-				
-				for(int i=0; i<children.size(); i++){
-					
-					if(!isNullOrBlank(fam.getHusband()) || !isNullOrBlank(fam.getWife())){
-						if(children.get(i).equalsIgnoreCase(fam.getHusband()) || children.get(i).equalsIgnoreCase(fam.getWife())){
-							System.out.println("ERROR - " + children.get(i) + " listed as parent and child to family " + fam.getUniqueId());	
-						}
-					}
-				}
-					
-			}
-		}			
-	}
+            if (isNullOrBlank(fam.getHusband())) {
+
+            } else {
+                GEDCOMIndividualRecord husband = (GEDCOMIndividualRecord) individuals.get(fam.getHusband());
+
+                if (isNullOrBlank(fam.getWife())) {
+
+                } else {
+                    GEDCOMIndividualRecord wife = (GEDCOMIndividualRecord) individuals.get(fam.getWife());
+
+                    if (husband.getUniqueId().equals(wife.getUniqueId())) {
+                        System.out.println("ERROR - " + husband.getUniqueId() + " listed as husband and wife to family " + fam.getUniqueId());
+                    }
+                }
+            }
+        }
+    }
+
+    public void checkChildOfSelf() {
+        for (String key : families.keySet()) {
+            GEDCOMFamilyRecord fam = (GEDCOMFamilyRecord) families.get(key);
+
+            if (fam.getChildren().size() > 0) {
+                ArrayList<String> children = fam.getChildren();
+
+                for (int i = 0; i < children.size(); i++) {
+
+                    if (!isNullOrBlank(fam.getHusband()) || !isNullOrBlank(fam.getWife())) {
+                        if (children.get(i).equalsIgnoreCase(fam.getHusband()) || children.get(i).equalsIgnoreCase(fam.getWife())) {
+                            System.out.println("ERROR - " + children.get(i) + " listed as parent and child to family " + fam.getUniqueId());
+                        }
+                    }
+                }
+
+            }
+        }
+    }
 
     public void checkMultiKidsBirthDate() {
         int count = 0;
@@ -646,38 +648,87 @@ public class GEDCOMFileReader {
                 // get husband
                 GEDCOMIndividualRecord husband = individuals.get(fam.getHusband());
                 // get wife
-                GEDCOMIndividualRecord wife= individuals.get(fam.getWife());
-                
+                GEDCOMIndividualRecord wife = individuals.get(fam.getWife());
+
                 // uncomment to print IDs for debug
                 // System.out.println("husb id = " + husband.getUniqueId() + ", wife id = " + wife.getUniqueId());
-                		
                 // cycle through each child
-                for (String childId : childrenArray){
-                	
+                for (String childId : childrenArray) {
+
                 	// uncomment to print id for debug
-                	// System.out.println("child id = " + childId);
-                	
+                    // System.out.println("child id = " + childId);
                     // if husband is also child, then wife is married to child (check fails)
-                    if ( 0 == husband.getUniqueId().compareTo(childId) ) {
-                    	
-                    	GEDCOMIndividualRecord child = individuals.get(childId);
-                    	
+                    if (0 == husband.getUniqueId().compareTo(childId)) {
+
+                        GEDCOMIndividualRecord child = individuals.get(childId);
+
                         System.out.println("ERROR - MarriedToChild: Wife ( ID = " + wife.getUniqueId() + ") is married to child (ID = " + child.getUniqueId() + ")");
                     }
-                    
+
                     // if wife is also child, then husband is married to child (check fails)
-                    if ( 0 == wife.getUniqueId().compareTo(childId) ) {
-                    	
-                    	GEDCOMIndividualRecord child = individuals.get(childId);
-                    	
+                    if (0 == wife.getUniqueId().compareTo(childId)) {
+
+                        GEDCOMIndividualRecord child = individuals.get(childId);
+
                         System.out.println("ERROR - MarriedToChild: Husband ( ID = " + husband.getUniqueId() + ") is married to child (ID = " + child.getUniqueId() + ")");
                     }
-                    
+
                 } // for (String childId : childrenArray)
             } // if( childrenArray != null )
         } // while(famIterator.hasNext())
     }
-    
+
+    public void concurrentSpouses() {
+        // get collection of families
+        Collection<GEDCOMFamilyRecord> famCollection = families.values();
+
+        // iterator for collection
+        Iterator<GEDCOMFamilyRecord> famIterator = famCollection.iterator();
+
+        //Family map with couples
+        Map<String, ArrayList> familyCouple = new HashMap<>();
+
+        // iterate through all families
+        while (famIterator.hasNext()) {
+            GEDCOMFamilyRecord fam = (GEDCOMFamilyRecord) famIterator.next();
+
+            // get husband
+            GEDCOMIndividualRecord husband = individuals.get(fam.getHusband());
+            GEDCOMIndividualRecord wife = individuals.get(fam.getWife());
+
+            //if the death dates are null then they are alive...record them as married
+            if (husband.getDeath() == null && wife.getDeath() == null) {
+                //couple array list
+                ArrayList<String> couples = new ArrayList<>();
+
+                couples.add(husband.getUniqueId());
+                couples.add(wife.getUniqueId());
+
+                //need to store Family IDs with Husband-Wife ID list
+                familyCouple.put(fam.getUniqueId(), couples);
+            }
+        } //end famIterator
+
+        String husbandID = "";
+        String wifeID = "";
+        //need to iterate though the map and check if any husband or wife IDs are in muiltiple family IDs
+        for (Map.Entry<String, ArrayList> entry : familyCouple.entrySet()) {
+            ArrayList<String> member = entry.getValue();
+
+            if (husbandID.isEmpty() && wifeID.isEmpty()) {
+                husbandID = member.get(0);
+                wifeID = member.get(1);
+                continue;
+            }
+
+            if (husbandID.equalsIgnoreCase(member.get(0))) {
+                System.out.println("ERROR - Husband " + member.get(0) + " has more than one concurrent wife!");
+            } else if (wifeID.equalsIgnoreCase(member.get(1))) {
+                System.out.println("ERROR - Wife " + member.get(1) + " has more than one concurrent husband!");
+            }
+        }
+    }
+
     public void readFile(String file) throws IOException {
 
         FileInputStream fis = null;
@@ -748,11 +799,11 @@ public class GEDCOMFileReader {
                             case "SEX":
                                 ind.setSex(currentGEDCOMObj.getArguments());
                                 break;
-                                
+
                             case "DEAT":
-        						ind.setIsDead(currentGEDCOMObj.getArguments());
-        						break;
-        						
+                                ind.setIsDead(currentGEDCOMObj.getArguments());
+                                break;
+
                             case "FAMS":
                                 ind.setFamilySpouseOf(retrieveXrefId(currentGEDCOMObj.getArguments()));
                                 break;

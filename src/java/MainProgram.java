@@ -4,54 +4,57 @@ import java.text.ParseException;
 import ssw555.project.team5.GEDCOMFileReader;
 
 public class MainProgram {
-	public static void main(String args[]) {
-		try {
-			GEDCOMFileReader gcfr = new GEDCOMFileReader();
-			gcfr.readFile("src/data/acceptanceTestFile.ged");
 
-			// death before birth check
-			gcfr.checkDeathBeforeBirth();
+    public static void main(String args[]) {
+        try {
+            GEDCOMFileReader gcfr = new GEDCOMFileReader();
+            gcfr.readFile("src/data/acceptanceTestFile.ged");
 
-			// death before marriage check
-			gcfr.checkDeathBeforeMarriage();
+            // death before birth check
+            gcfr.checkDeathBeforeBirth();
 
-			// marriage before birth check
-			gcfr.checkMarriageBeforeBirth();
+            // death before marriage check
+            gcfr.checkDeathBeforeMarriage();
 
-			// child birth before parent check
-			gcfr.checkChildBirthBeforeParentBirth();
+            // marriage before birth check
+            gcfr.checkMarriageBeforeBirth();
 
-			// check for age > 100
-			gcfr.isAgeGreaterThan100();
+            // child birth before parent check
+            gcfr.checkChildBirthBeforeParentBirth();
 
-			// check to see if parent is less than 13 years old
-			gcfr.isParentAgeIsLessThan13();
+            // check for age > 100
+            gcfr.isAgeGreaterThan100();
 
-			// check for future birth, death, marriage, and divorce dates
-			gcfr.checkFutureDate();
-			
-			// check for same sex marriages with children
-			gcfr.checkSameSexMarriageWithChildren();
-                        
+            // check to see if parent is less than 13 years old
+            gcfr.isParentAgeIsLessThan13();
+
+            // check for future birth, death, marriage, and divorce dates
+            gcfr.checkFutureDate();
+
+            // check for same sex marriages with children
+            gcfr.checkSameSexMarriageWithChildren();
+
             // check for parents who have more than three children with same birth date
             gcfr.checkMultiKidsBirthDate();
-            
+
             // check for parent married to their child
             gcfr.checkMarriedToChild();
-            
+
             // check individual married to self
             gcfr.checkMarriedToSelf();
-            
+
             //check individual is child of self
             gcfr.checkChildOfSelf();
-            
 
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+            //check for multiple spouses at the same time
+            gcfr.concurrentSpouses();
+
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 }
