@@ -41,7 +41,7 @@ public class MainProgram {
             gcfr.checkSameSexMarriageWithChildren();
             
             // US13 - check for multiple spouses at the same time
-            gcfr.concurrentSpouses();
+            gcfr.checkconcurrentSpouses();
             
             // US14 - check for married under 16
             gcfr.checkMarriedWhenUnder16();
@@ -54,6 +54,9 @@ public class MainProgram {
             
             // US22 - check for duplicate child entries
             gcfr.checkDuplicateChildEntries();
+            
+            // US19 - check individuals divorce date before marriage date
+            gcfr.checkIndividualsDivorceDatePriorMarriageDate();
 
 
         } catch (IOException e) {

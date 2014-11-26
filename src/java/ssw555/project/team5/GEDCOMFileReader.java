@@ -678,7 +678,7 @@ public class GEDCOMFileReader {
         } // while(famIterator.hasNext())
     }
 
-    public void concurrentSpouses() {
+    public void checkconcurrentSpouses() {
         // get collection of families
         Collection<GEDCOMFamilyRecord> famCollection = families.values();
 
@@ -694,6 +694,7 @@ public class GEDCOMFileReader {
 
             // get husband
             GEDCOMIndividualRecord husband = individuals.get(fam.getHusband());
+            //get wife
             GEDCOMIndividualRecord wife = individuals.get(fam.getWife());
 
             //if the death dates are null then they are alive...record them as married
@@ -814,6 +815,46 @@ public class GEDCOMFileReader {
             } // if (childrenArrayList != null)
         } // while(famIterator.hasNext())
     }
+    
+    public void checkIndividualsDivorceDatePriorMarriageDate() {
+        
+        /* check to see if individuals are married
+         * store individuals ID and married date in hash table
+         * check to see if they were divorced in another family
+         * compare dates
+         */
+        int marriageAge = 0;
+        int divorceAge = 0;
+        
+        
+        // get collection of families
+        Collection<GEDCOMFamilyRecord> famCollection = families.values();
+
+        // iterator for collection
+        Iterator<GEDCOMFamilyRecord> famIterator = famCollection.iterator();
+        
+         // iterate through all families
+        while (famIterator.hasNext()) {
+            GEDCOMFamilyRecord fam = (GEDCOMFamilyRecord) famIterator.next();
+
+            // get husband
+            GEDCOMIndividualRecord husband = individuals.get(fam.getHusband());
+            //get wife
+            GEDCOMIndividualRecord wife = individuals.get(fam.getWife());
+            
+            if (fam.getMarried() != null && fam.getDivorce() != null) {
+                marriageAge = getAge(fam.getMarried());
+                divorceAge = getAge(fam.getDivorce());
+                
+                if (divorceAge > marriageAge) {
+                    System.out.println("US19 - ERROR - Family " + fam.getUniqueId() + " has a Divorce date: " + fam.getDivorce()
+                            + " before Marriage date: " + fam.getMarried());
+                }
+            }
+        }
+    }
+    
+    
 
     public void readFile(String file) throws IOException {
 
