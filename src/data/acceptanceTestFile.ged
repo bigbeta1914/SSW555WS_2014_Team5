@@ -221,9 +221,10 @@
 1 FAMS @F8@
 0 NOTE I2 is being used as a test for story US03 "death before marriage" check
 0 NOTE I3 is being used as a test for story US04 "marriage before birth" check
+0 NOTE I2, I3 is being used as a test for story US20 "male/wife, female/husband" check
 0 @F1@ FAM
-1 HUSB @I2@
-1 WIFE @I3@
+1 HUSB @I3@
+1 WIFE @I2@
 1 CHIL @I1@
 1 MARR
 2 DATE 10 SEP 1947
