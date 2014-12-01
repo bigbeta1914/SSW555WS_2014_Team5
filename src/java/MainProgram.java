@@ -25,6 +25,8 @@ public class MainProgram {
             // US06 - check for parent married to their child
             gcfr.checkMarriedToChild();
             
+            // Note: US07 Withdrawn
+            
             // US08 - check for future birth, death, marriage, and divorce dates
             gcfr.checkFutureDate();
             
@@ -52,7 +54,7 @@ public class MainProgram {
             // US16 - check to see if parent is less than 13 years old
             gcfr.isParentAgeIsLessThan13();
             
-
+            // Note: US18 was withdrawn
 
             // US19 - check individuals divorce date before marriage date
             gcfr.checkIndividualsDivorceDatePriorMarriageDate();
@@ -63,7 +65,6 @@ public class MainProgram {
 
             // US21 - Individual indicated as not dead, yet a death date is provided
             gcfr.checkNotDeadWithDeathDate();
-            
 
             // US22 - check for duplicate child entries
             gcfr.checkDuplicateChildEntries();
