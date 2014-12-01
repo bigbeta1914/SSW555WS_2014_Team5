@@ -41,7 +41,7 @@ public class MainProgram {
             gcfr.checkSameSexMarriageWithChildren();
             
             // US13 - check for multiple spouses at the same time
-            gcfr.checkconcurrentSpouses();
+            gcfr.checkConcurrentSpouses();
             
             // US14 - check for married under 16
             gcfr.checkMarriedWhenUnder16();
@@ -52,6 +52,8 @@ public class MainProgram {
             // US16 - check to see if parent is less than 13 years old
             gcfr.isParentAgeIsLessThan13();
             
+
+
             // US19 - check individuals divorce date before marriage date
             gcfr.checkIndividualsDivorceDatePriorMarriageDate();
             
@@ -59,11 +61,13 @@ public class MainProgram {
             //        not necessarily same sex marriage
             gcfr.checkHusbWifeListedAsFemaleMale();
 
+            // US21 - Individual indicated as not dead, yet a death date is provided
+            gcfr.checkNotDeadWithDeathDate();
+            
+
             // US22 - check for duplicate child entries
             gcfr.checkDuplicateChildEntries();
             
-            
-
 
         } catch (IOException e) {
             // TODO Auto-generated catch block
