@@ -218,6 +218,18 @@
 1 SEX M
 1 BIRT
 2 DATE 19 APR 1953
+0 NOTE Jane Doe is being used as a test for story US21 "Individual has death date, but not indicated as dead"
+0 @I3@ INDI
+1 NAME Jane /Doe/
+2 GIVN Jane
+2 SURN Doe
+2 _MARNM Smith
+0 NOTE Same sex marriage test
+1 SEX M
+1 BIRT
+2 DATE 11 SEP 1947
+1 DEAT N 
+2 DATE 7 JUN 1990 
 1 FAMS @F8@
 0 NOTE I2 is being used as a test for story US03 "death before marriage" check
 0 NOTE I3 is being used as a test for story US04 "marriage before birth" check
