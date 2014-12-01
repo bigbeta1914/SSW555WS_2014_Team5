@@ -10,44 +10,54 @@ public class MainProgram {
             GEDCOMFileReader gcfr = new GEDCOMFileReader();
             gcfr.readFile("src/data/acceptanceTestFile.ged");
 
-            // death before birth check
+            // US01 - death before birth check
             gcfr.checkDeathBeforeBirth();
 
-            // death before marriage check
+            // US03 - death before marriage check
             gcfr.checkDeathBeforeMarriage();
 
-            // marriage before birth check
+            // US04 - marriage before birth check
             gcfr.checkMarriageBeforeBirth();
 
-            // child birth before parent check
+            // US05 - child birth before parent check
             gcfr.checkChildBirthBeforeParentBirth();
-
-            // check for age > 100
-            gcfr.isAgeGreaterThan100();
-
-            // check to see if parent is less than 13 years old
-            gcfr.isParentAgeIsLessThan13();
-
-            // check for future birth, death, marriage, and divorce dates
-            gcfr.checkFutureDate();
-
-            // check for same sex marriages with children
-            gcfr.checkSameSexMarriageWithChildren();
-
-            // check for parents who have more than three children with same birth date
-            gcfr.checkMultiKidsBirthDate();
-
-            // check for parent married to their child
+            
+            // US06 - check for parent married to their child
             gcfr.checkMarriedToChild();
-
-            // check individual married to self
+            
+            // US08 - check for future birth, death, marriage, and divorce dates
+            gcfr.checkFutureDate();
+            
+            // US09 - check individual married to self
             gcfr.checkMarriedToSelf();
 
-            //check individual is child of self
+            // US10 - check individual is child of self
             gcfr.checkChildOfSelf();
+            
+            // US11 - check for parents who have more than three children with same birth date
+            gcfr.checkMultiKidsBirthDate();
+            
+            // US12, US17 - check for same sex marriages with children
+            gcfr.checkSameSexMarriageWithChildren();
+            
+            // US13 - check for multiple spouses at the same time
+            gcfr.checkconcurrentSpouses();
+            
+            // US14 - check for married under 16
+            gcfr.checkMarriedWhenUnder16();
+            
+            // US15 - check for age > 100
+            gcfr.isAgeGreaterThan100();
 
-            //check for multiple spouses at the same time
-            gcfr.concurrentSpouses();
+            // US16 - check to see if parent is less than 13 years old
+            gcfr.isParentAgeIsLessThan13();
+            
+            // US22 - check for duplicate child entries
+            gcfr.checkDuplicateChildEntries();
+            
+            // US19 - check individuals divorce date before marriage date
+            gcfr.checkIndividualsDivorceDatePriorMarriageDate();
+
 
         } catch (IOException e) {
             // TODO Auto-generated catch block

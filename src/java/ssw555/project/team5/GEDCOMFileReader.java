@@ -141,7 +141,7 @@ public class GEDCOMFileReader {
 
                 // do the check
                 if (calendarDeath.before(calandarBirth)) {
-                    System.out.println("ERROR - DeathBeforeBirth: id = " + ind.getUniqueId()
+                    System.out.println("US02 - ERROR - DeathBeforeBirth: id = " + ind.getUniqueId()
                             + ", death date = " + ind.getDeath() + " is before birth date = " + ind.getBirth());
                 }
             }
@@ -176,7 +176,7 @@ public class GEDCOMFileReader {
                         Calendar calendarDeath = convertStringToDate(ind.getDeath());
                         // do the check
                         if (calendarDeath.before(calendarMarried)) {
-                            System.out.println("ERROR - DeathBeforeMarriage: ID = " + ind.getUniqueId()
+                            System.out.println("US03 - ERROR - DeathBeforeMarriage: ID = " + ind.getUniqueId()
                                     + ", death date = " + ind.getDeath() + " is before marriage date = " + fam.getMarried());
                         }
 
@@ -216,7 +216,7 @@ public class GEDCOMFileReader {
                         Calendar calendarBirth = convertStringToDate(ind.getBirth());
                         // do the check
                         if (calendarMarried.before(calendarBirth)) {
-                            System.out.println("ERROR - MarriageBeforeBirth: ID = " + ind.getUniqueId()
+                            System.out.println("US04 - ERROR - MarriageBeforeBirth: ID = " + ind.getUniqueId()
                                     + ", marriage date = " + fam.getMarried() + " is before birth date = " + ind.getBirth());
                         }
 
@@ -239,7 +239,7 @@ public class GEDCOMFileReader {
                 birth = new SimpleDateFormat("dd MMM yyyy").parse(ind.getBirth());
 
                 if (birth.after(new Date())) {
-                    System.out.println("ERROR - individual with ID = " + ind.getUniqueId() + " has birth date after current date.");
+                    System.out.println("US08 - ERROR - individual with ID = " + ind.getUniqueId() + " has birth date after current date.");
                 }
 
             }
@@ -251,7 +251,7 @@ public class GEDCOMFileReader {
                 death = new SimpleDateFormat("dd MMM yyyy").parse(ind.getDeath());
 
                 if (death.after(new Date())) {
-                    System.out.println("ERROR - individual with ID = " + ind.getUniqueId() + " has death date after current date.");
+                    System.out.println("US08 - ERROR - individual with ID = " + ind.getUniqueId() + " has death date after current date.");
                 }
             }
         }
@@ -265,7 +265,7 @@ public class GEDCOMFileReader {
                 married = new SimpleDateFormat("dd MMM yyyy").parse(fam.getMarried());
 
                 if (married.after(new Date())) {
-                    System.out.println("ERROR - " + fam.getHusband() + " & " + fam.getWife() + " married date is after current date.");
+                    System.out.println("US08 - ERROR - " + fam.getHusband() + " & " + fam.getWife() + " married date is after current date.");
                 }
 
             }
@@ -276,7 +276,7 @@ public class GEDCOMFileReader {
                 divorce = new SimpleDateFormat("dd MMM yyyy").parse(fam.getDivorce());
 
                 if (divorce.after(new Date())) {
-                    System.out.println("ERROR - " + fam.getHusband() + " & " + fam.getWife() + " divorce date is after current date.");
+                    System.out.println("US08 - ERROR - " + fam.getHusband() + " & " + fam.getWife() + " divorce date is after current date.");
                 }
             }
         }
@@ -320,7 +320,7 @@ public class GEDCOMFileReader {
                             Calendar calendarChildBirth = convertStringToDate(child.getBirth());
                             // do the check
                             if (calendarChildBirth.before(calendarParentBirth)) {
-                                System.out.println("ERROR - ChildBirthBeforeParentBirth: child (" + child.getUniqueId() + ") birth date = " + child.getBirth() + " is before parent (" + parent.getUniqueId()
+                                System.out.println("US05 - ERROR - ChildBirthBeforeParentBirth: child (" + child.getUniqueId() + ") birth date = " + child.getBirth() + " is before parent (" + parent.getUniqueId()
                                         + ") birth date = " + parent.getBirth());
                             }
                         } // if( child.getBirth() != null)
@@ -345,7 +345,7 @@ public class GEDCOMFileReader {
                             Calendar calendarChildBirth = convertStringToDate(child.getBirth());
                             // do the check
                             if (calendarChildBirth.before(calendarParentBirth)) {
-                                System.out.println("ERROR - ChildBirthBeforeParentBirth: child (" + child.getUniqueId() + ") birth date = " + child.getBirth() + " is before parent (" + parent.getUniqueId()
+                                System.out.println("US05 - ERROR - ChildBirthBeforeParentBirth: child (" + child.getUniqueId() + ") birth date = " + child.getBirth() + " is before parent (" + parent.getUniqueId()
                                         + ") birth date = " + parent.getBirth());
                             }
                         } // if( child.getBirth() != null)
@@ -374,7 +374,7 @@ public class GEDCOMFileReader {
             if (father.getBirth() != null) {
                 age = getAge(father.getBirth());
                 if (age > 100) {
-                    System.out.println("ANOMALY - isAgeGreaterThan100: individual with ID = " + father.getUniqueId() + " claims to be over 100 years old!");
+                    System.out.println("US15 - ANOMALY - isAgeGreaterThan100: individual with ID = " + father.getUniqueId() + " claims to be over 100 years old!");
                 }
             }
 
@@ -385,7 +385,7 @@ public class GEDCOMFileReader {
             if (mother.getBirth() != null) {
                 age = getAge(mother.getBirth());
                 if (age > 100) {
-                    System.out.println("ANOMALY - isAgeGreaterThan100: individual with ID = " + mother.getUniqueId() + " claims to be over 100 years old!");
+                    System.out.println("US15 - ANOMALY - isAgeGreaterThan100: individual with ID = " + mother.getUniqueId() + " claims to be over 100 years old!");
                 }
             }
 
@@ -405,7 +405,7 @@ public class GEDCOMFileReader {
                     if (child.getBirth() != null) {
                         age = getAge(child.getBirth());
                         if (age > 100) {
-                            System.out.println("ANOMALY - isAgeGreaterThan100: individual with ID = " + child.getUniqueId() + " claims to be over 100 years old!");
+                            System.out.println("US15 - ANOMALY - isAgeGreaterThan100: individual with ID = " + child.getUniqueId() + " claims to be over 100 years old!");
                         }
                     }
                 }
@@ -483,7 +483,7 @@ public class GEDCOMFileReader {
                 if (father.getBirth() != null) {
                     age = getAge(father.getBirth());
                     if (age < 13) {
-                        System.out.println("ANOMALY - parentUnder13: parent (individual) with ID = " + father.getUniqueId() + " claims to be under 13");
+                        System.out.println("US16 - ANOMALY - parentUnder13: parent (individual) with ID = " + father.getUniqueId() + " claims to be under 13");
                     }
                 }
 
@@ -491,7 +491,7 @@ public class GEDCOMFileReader {
                 if (mother.getBirth() != null) {
                     age = getAge(mother.getBirth());
                     if (age < 13) {
-                        System.out.println("ANOMALY - parentUnder13: parent (individual) with ID = " + mother.getUniqueId() + " claims to be under 13");
+                        System.out.println("US16 - ANOMALY - parentUnder13: parent (individual) with ID = " + mother.getUniqueId() + " claims to be under 13");
                     }
                 }
             }
@@ -513,10 +513,10 @@ public class GEDCOMFileReader {
                     GEDCOMIndividualRecord wife = (GEDCOMIndividualRecord) individuals.get(fam.getWife());
 
                     if (husband.getSex().equals(wife.getSex())) {
-                        System.out.println("ANOMALY - " + fam.getUniqueId() + " family has same sex marrige with husband: " + husband.getUniqueId() + " and wife: " + wife.getUniqueId());
+                        System.out.println("US12 - ANOMALY - " + fam.getUniqueId() + " family has same sex marriage with husband: " + husband.getUniqueId() + " and wife: " + wife.getUniqueId());
 
                         if (fam.getChildren().size() > 0) {
-                            System.out.println("ANOMALY - " + fam.getUniqueId() + " family has same sex marrige with children!");
+                            System.out.println("US17 - ANOMALY - " + fam.getUniqueId() + " family has same sex marriage with children!");
                         }
                     }
                 }
@@ -539,7 +539,7 @@ public class GEDCOMFileReader {
                     GEDCOMIndividualRecord wife = (GEDCOMIndividualRecord) individuals.get(fam.getWife());
 
                     if (husband.getUniqueId().equals(wife.getUniqueId())) {
-                        System.out.println("ERROR - " + husband.getUniqueId() + " listed as husband and wife to family " + fam.getUniqueId());
+                        System.out.println("US09 - ERROR - " + husband.getUniqueId() + " listed as husband and wife to family " + fam.getUniqueId());
                     }
                 }
             }
@@ -557,7 +557,7 @@ public class GEDCOMFileReader {
 
                     if (!isNullOrBlank(fam.getHusband()) || !isNullOrBlank(fam.getWife())) {
                         if (children.get(i).equalsIgnoreCase(fam.getHusband()) || children.get(i).equalsIgnoreCase(fam.getWife())) {
-                            System.out.println("ERROR - " + children.get(i) + " listed as parent and child to family " + fam.getUniqueId());
+                            System.out.println("US10 - ERROR - " + children.get(i) + " listed as parent and child to family " + fam.getUniqueId());
                         }
                     }
                 }
@@ -612,7 +612,7 @@ public class GEDCOMFileReader {
                             if (age.equals(child.getBirth())) {
                                 count++;
                                 if (count > 2) {
-                                    System.out.println("ANAMOLY - Family " + fam.getUniqueId() + " has more "
+                                    System.out.println("US11 - ANAMOLY - Family " + fam.getUniqueId() + " has more "
                                             + "than 3 children with the same birth date!");
                                 }
                             } else {
@@ -662,7 +662,7 @@ public class GEDCOMFileReader {
 
                         GEDCOMIndividualRecord child = individuals.get(childId);
 
-                        System.out.println("ERROR - MarriedToChild: Wife ( ID = " + wife.getUniqueId() + ") is married to child (ID = " + child.getUniqueId() + ")");
+                        System.out.println("US06 - ERROR - MarriedToChild: Wife ( ID = " + wife.getUniqueId() + ") is married to child (ID = " + child.getUniqueId() + ")");
                     }
 
                     // if wife is also child, then husband is married to child (check fails)
@@ -670,7 +670,7 @@ public class GEDCOMFileReader {
 
                         GEDCOMIndividualRecord child = individuals.get(childId);
 
-                        System.out.println("ERROR - MarriedToChild: Husband ( ID = " + husband.getUniqueId() + ") is married to child (ID = " + child.getUniqueId() + ")");
+                        System.out.println("US06 - ERROR - MarriedToChild: Husband ( ID = " + husband.getUniqueId() + ") is married to child (ID = " + child.getUniqueId() + ")");
                     }
 
                 } // for (String childId : childrenArray)
@@ -678,7 +678,7 @@ public class GEDCOMFileReader {
         } // while(famIterator.hasNext())
     }
 
-    public void concurrentSpouses() {
+    public void checkconcurrentSpouses() {
         // get collection of families
         Collection<GEDCOMFamilyRecord> famCollection = families.values();
 
@@ -694,6 +694,7 @@ public class GEDCOMFileReader {
 
             // get husband
             GEDCOMIndividualRecord husband = individuals.get(fam.getHusband());
+            //get wife
             GEDCOMIndividualRecord wife = individuals.get(fam.getWife());
 
             //if the death dates are null then they are alive...record them as married
@@ -722,12 +723,138 @@ public class GEDCOMFileReader {
             }
 
             if (husbandID.equalsIgnoreCase(member.get(0))) {
-                System.out.println("ERROR - Husband " + member.get(0) + " has more than one concurrent wife!");
+                System.out.println("US13 - ANOMALY - Husband " + member.get(0) + " has more than one concurrent wife!");
             } else if (wifeID.equalsIgnoreCase(member.get(1))) {
-                System.out.println("ERROR - Wife " + member.get(1) + " has more than one concurrent husband!");
+                System.out.println("US13 - ANOMALY - Wife " + member.get(1) + " has more than one concurrent husband!");
             }
         }
     }
+    
+    public void checkMarriedWhenUnder16()
+    {
+    	// get collection of families
+        Collection<GEDCOMFamilyRecord> famCollection = families.values();
+
+        // iterator for collection
+        Iterator<GEDCOMFamilyRecord> famIterator = famCollection.iterator();
+
+        // iterate through all families
+        while (famIterator.hasNext()) {
+            GEDCOMFamilyRecord fam = (GEDCOMFamilyRecord) famIterator.next();
+
+            // only check if marriage has a date
+            if (fam.getMarried() != null) {
+                // convert marriage date to Calendar object
+                Calendar calendarMarried = convertStringToDate(fam.getMarried());
+
+                GEDCOMIndividualRecord ind;
+
+                // get husband
+                ind = individuals.get(fam.getHusband());
+
+                for (int i = 0; i < 2; i++) {
+                    // only check if birth has a date (may be omitted) AND marriage is after birth (else other error)
+                    if ( (ind.getBirth() != null) && 
+                    	 (calendarMarried.after(convertStringToDate(ind.getBirth())))) {
+                    	// create Calendar object at birth
+                        Calendar calendar16 = convertStringToDate(ind.getBirth());
+                        // add 16 years
+                        calendar16.set(Calendar.YEAR, calendar16.get(Calendar.YEAR) + 16);
+                        
+                        // do the check
+                        if (calendarMarried.before(calendar16)) {
+                            System.out.println("US14 - ANNOMALY - MarriedWhenUnder16: ID = " + ind.getUniqueId()
+                                    + ", marriage date = " + fam.getMarried() + ", birth date = " + ind.getBirth());
+                        }
+
+                        ind = individuals.get(fam.getWife());
+                    }
+                }
+            }
+        }
+    }
+    
+    public void checkDuplicateChildEntries()
+    {
+    	// get collection of families
+        Collection<GEDCOMFamilyRecord> famCollection = families.values();
+
+        // iterator for collection
+        Iterator<GEDCOMFamilyRecord> famIterator = famCollection.iterator();
+
+        // iterate through all families
+        while (famIterator.hasNext()) {
+            GEDCOMFamilyRecord fam = (GEDCOMFamilyRecord) famIterator.next();
+
+            // get children array
+            ArrayList<String> childrenArrayList = fam.getChildren();
+
+            // only check if family has children
+            if (childrenArrayList != null) {
+                // convert to child array, because I'm not sure how to work with an array list
+                String[] childrenArray = new String[childrenArrayList.size()];
+                childrenArray = childrenArrayList.toArray(childrenArray);
+
+                // create Map to store children ID(s)
+                Map<String, Integer> childMap = new HashMap<String, Integer>();
+                // cycle through each child and compare birthdate to husband's birthdate
+                for (String childId : childrenArray) {
+                    
+                	// if child is already in map
+                	if(childMap.containsKey(childId))
+                	{
+                		// report duplicate child error
+                		System.out.println("US22 - ERROR - DuplicateChildEntries: child ID = " + childId
+                                + " is duplicated in family with ID = " + fam.getUniqueId());
+                	}
+                	else
+                	{
+                		childMap.put(childId, 1);
+                	}
+                } // for (String childId : childrenArray)
+            } // if (childrenArrayList != null)
+        } // while(famIterator.hasNext())
+    }
+    
+    public void checkIndividualsDivorceDatePriorMarriageDate() {
+        
+        /* check to see if individuals are married
+         * store individuals ID and married date in hash table
+         * check to see if they were divorced in another family
+         * compare dates
+         */
+        int marriageAge = 0;
+        int divorceAge = 0;
+        
+        
+        // get collection of families
+        Collection<GEDCOMFamilyRecord> famCollection = families.values();
+
+        // iterator for collection
+        Iterator<GEDCOMFamilyRecord> famIterator = famCollection.iterator();
+        
+         // iterate through all families
+        while (famIterator.hasNext()) {
+            GEDCOMFamilyRecord fam = (GEDCOMFamilyRecord) famIterator.next();
+
+            // get husband
+            GEDCOMIndividualRecord husband = individuals.get(fam.getHusband());
+            //get wife
+            GEDCOMIndividualRecord wife = individuals.get(fam.getWife());
+            
+            if (fam.getMarried() != null && fam.getDivorce() != null) {
+                marriageAge = getAge(fam.getMarried());
+                divorceAge = getAge(fam.getDivorce());
+                
+                if (divorceAge > marriageAge) {
+                    System.out.println("US19 - ERROR - Family " + fam.getUniqueId() + " has a Divorce date: " + fam.getDivorce()
+                            + " before Marriage date: " + fam.getMarried());
+                }
+            }
+        }
+    }
+    
+    
 
     public void readFile(String file) throws IOException {
 
