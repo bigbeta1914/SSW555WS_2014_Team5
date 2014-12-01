@@ -52,11 +52,17 @@ public class MainProgram {
             // US16 - check to see if parent is less than 13 years old
             gcfr.isParentAgeIsLessThan13();
             
+            // US19 - check individuals divorce date before marriage date
+            gcfr.checkIndividualsDivorceDatePriorMarriageDate();
+            
+            // US20 - check for Male/Female listed as Wife/Husband respectively, 
+            //        not necessarily same sex marriage
+            gcfr.checkHusbWifeListedAsFemaleMale();
+
             // US22 - check for duplicate child entries
             gcfr.checkDuplicateChildEntries();
             
-            // US19 - check individuals divorce date before marriage date
-            gcfr.checkIndividualsDivorceDatePriorMarriageDate();
+            
 
 
         } catch (IOException e) {

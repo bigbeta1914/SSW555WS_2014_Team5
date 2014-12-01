@@ -854,7 +854,48 @@ public class GEDCOMFileReader {
         }
     }
     
-    
+public void checkHusbWifeListedAsFemaleMale() {
+        
+        /* check Male/Female listed as 
+         * Wife/Husband respectively, 
+         * not necessarily same sex marriage
+         */
+        
+        // get collection of families
+        Collection<GEDCOMFamilyRecord> famCollection = families.values();
+
+        // iterator for collection
+        Iterator<GEDCOMFamilyRecord> famIterator = famCollection.iterator();
+        
+         // iterate through all families
+        while (famIterator.hasNext()) {
+            GEDCOMFamilyRecord fam = (GEDCOMFamilyRecord) famIterator.next();
+
+            // get husband
+            GEDCOMIndividualRecord husband = individuals.get(fam.getHusband());
+            //get wife
+            GEDCOMIndividualRecord wife = individuals.get(fam.getWife());
+            
+            
+            // only check if husband's sex is provided
+            if ( husband.getSex() != null ) {
+                if ( husband.getSex().equals("F") ) {
+                    System.out.println("US20 - ANOMALY - Husband " + husband.getUniqueId() +
+                    		" from family " + fam.getUniqueId() +
+                            " is listed as a female");
+                }
+            }
+            
+         // only check if wife's sex is provided
+            if ( wife.getSex() != null ) {
+                if ( wife.getSex().equals("M")) {
+                    System.out.println("US20 - ANOMALY - Wife " + wife.getUniqueId() +
+                    		" from family " + fam.getUniqueId() +
+                            " is listed as a male");
+                }
+            }
+        }
+    }
 
     public void readFile(String file) throws IOException {
 
