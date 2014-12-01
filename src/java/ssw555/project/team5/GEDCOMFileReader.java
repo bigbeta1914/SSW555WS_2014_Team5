@@ -566,6 +566,22 @@ public class GEDCOMFileReader {
         }
     }
 
+    public void checkNotDeadWithDeathDate(){
+		for(String key : individuals.keySet()){
+			GEDCOMIndividualRecord ind = (GEDCOMIndividualRecord) individuals.get(key);
+			
+			if(isNullOrBlank(ind.getDeath())){
+			} else {
+				if(isNullOrBlank(ind.getIsDead())){
+				} else {
+					 if("N".equalsIgnoreCase(ind.getIsDead())){
+		                    System.out.println("US21 - ERROR - " + ind.getUniqueId() + " listed as not dead but has death date.");
+					 }
+				}
+			}				
+		}	
+	}
+    
     public void checkMultiKidsBirthDate() {
         int count = 0;
         String age = "";
@@ -678,7 +694,7 @@ public class GEDCOMFileReader {
         } // while(famIterator.hasNext())
     }
 
-    public void checkconcurrentSpouses() {
+    public void checkConcurrentSpouses() {
         // get collection of families
         Collection<GEDCOMFamilyRecord> famCollection = families.values();
 
